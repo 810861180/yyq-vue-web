@@ -36,6 +36,12 @@ export const constantRouterMap = [
 
 export const asyncRouterMap = [
   {
+    path: '/data-screen',
+    name: 'dataScreen',
+    meta: {title: '数据大屏', icon: 'product'},
+    component: () => import('@/views/alive/live-real/data-screen')
+  },
+  {
     path: '/pms',
     component: Layout,
     redirect: '/pms/product',
@@ -45,13 +51,13 @@ export const asyncRouterMap = [
       {
         path: 'product',
         name: 'real-live',
-        component: () => import('@/views/pms/product/index'),
+        component: () => import('@/views/alive/live-real/index'),
         meta: {title: '实时直播榜', icon: 'product-list'}
       },
       {
         path: 'addProduct',
         name: 'hot-live',
-        component: () => import('@/views/pms/product/add'),
+        component: () => import('@/views/alive/broadcast-room/index'),
         meta: {title: '爆款直播间', icon: 'product-add'}
       },
       {
