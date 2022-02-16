@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="room-record">
-                <a style="color: #409EFF;">直播记录 <span style="font-weight: bold;">{{ roomInfo.planData.tiktok_user_live_count }}</span>场>></a>
+                <a style="color: #409EFF;" @click="handleRecord">直播记录 <span style="font-weight: bold;">{{ roomInfo.planData.tiktok_user_live_count }}</span>场>></a>
             </div>
         </el-card>
     </div>
@@ -51,11 +51,11 @@ export default {
             default: () => {}
         }
     },
-    data() {
-        return {
-            
+    methods: {
+        handleRecord() {
+            this.$emit('handleRecord', this.roomInfo)
         }
-    },
+    }
 }
 </script>
 

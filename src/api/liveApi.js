@@ -21,4 +21,7 @@ export default class LiveApi {
 
     // 获取爆款直播间
     static getLiveHotRoom = (params) => request({url: '/live/list/LiveHotRoom', method:'get', params});
+
+    // 获取爆款直播间历史直播数据
+    static getLiveHotRoomHistory = (params) => request({url: '/live/list/LiveHotRoomHistory', method:'get', params});
 }

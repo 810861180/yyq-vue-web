@@ -27,9 +27,38 @@ const centToyuan = (value) => {
   return (value / 100).toFixed(2);
 }
 // 时间戳转日期
+const toDate = (value) => {
+  return new Date(parseInt(value)).toLocaleString().replace(/年|月/g, '-').replace(/日/g, ' ').replace(/\//g, '-');
+}
+// 毫秒转化为时分秒
+const formatSeconds = (value) => {
+  var theTime = parseInt(value) / 1000;// 秒
+  var theTime1 = 0;// 分
+  var theTime2 = 0;// 小时
+  // alert(theTime);
+  if(theTime > 60) {
+    theTime1 = parseInt(theTime/60);
+    theTime = parseInt(theTime%60);
+    // alert(theTime1+"-"+theTime);
+    if(theTime1 > 60) {
+      theTime2 = parseInt(theTime1/60);
+      theTime1 = parseInt(theTime1%60);
+    }
+  }
+  var result = ""+parseInt(theTime)+"秒";
+  if(theTime1 > 0) {
+    result = ""+parseInt(theTime1)+"分"+result;
+  }
+  if(theTime2 > 0) {
+    result = ""+parseInt(theTime2)+"小时"+result;
+  }
+  return result;
+}
+
+// 时间戳转日期
 Vue.filter('toDate', value => {
   if (!value) return ''
-  return new Date(parseInt(value)).toLocaleString().replace(/年|月/g, '-').replace(/日/g, ' ').replace(/\//g, '-');
+  return toDate(value)
 })
 // 转化为万为单位
 Vue.filter('toWan', value => {
@@ -49,6 +78,8 @@ Vue.filter('tablefilter', (value, name, replace) => {
   if (name === 'toWan') return toWan(value);
   if (name === 'centToyuan') return centToyuan(value);
   if (name === 'yuanAndWan') return toWan(centToyuan(value));
+  if (name === 'toDate') return toDate(value);
+  if (name === 'toTime') return formatSeconds(value);
   return value;
 })
 // 全局过滤器*****************************

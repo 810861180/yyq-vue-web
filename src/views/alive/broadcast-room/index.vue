@@ -9,6 +9,7 @@
                 :timestamp="item[0].date">
                 <div class="room-content">
                     <roomCard 
+                        @handleRecord="handleRecord"
                         :roomInfo="room.data" 
                         v-for="room in item"  
                         :key="room.data.liveId">
@@ -17,15 +18,18 @@
                 </el-timeline-item>
             </el-timeline>
         </div>
+        <record-modal ref="recordModal"></record-modal>
     </div>
 </template>
 
 <script>
 import roomCard from './room-card.vue';
 import LiveApi from "../../../api/liveApi";
+import recordModal from './record-modal.vue';
 export default {
     components: {
-        roomCard
+        roomCard,
+        recordModal
     },
     data() {
         return {
@@ -58,6 +62,13 @@ export default {
             })
             console.log(this.roomList);
         })
+    },
+    methods: {
+        handleRecord(item) {
+            console.log(item);
+            this.$refs.recordModal.recordData = item;
+            this.$refs.recordModal.dialogVisible = true;
+        }
     }
 }
 </script>
