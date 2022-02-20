@@ -42,6 +42,12 @@ export const asyncRouterMap = [
     component: () => import('@/views/alive/live-real/data-screen')
   },
   {
+    path: '/addProductCate',
+    name: 'windmill-live',
+    component: () => import('@/views/alive/sale-rank/details'),
+    meta: {title: '直播风车榜'}
+  },
+  {
     path: '/pms',
     component: Layout,
     redirect: '/pms/product',
@@ -73,13 +79,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/pms/productCate/index'),
         meta: {title: '直播引流榜', icon: 'product-cate'}
       },
-      {
-        path: 'addProductCate',
-        name: 'windmill-live',
-        component: () => import('@/views/pms/productCate/add'),
-        meta: {title: '直播风车榜'},
-        hidden: true
-      },
+      // {
+      //   path: 'addProductCate',
+      //   name: 'windmill-live',
+      //   component: () => import('@/views/pms/productCate/add'),
+      //   meta: {title: '直播风车榜'},
+      //   hidden: true
+      // },
       {
         path: 'updateProductCate',
         name: 'search-live',

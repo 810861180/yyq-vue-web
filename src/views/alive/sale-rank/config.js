@@ -1,11 +1,13 @@
 export const rankColumn = [
     {prop: 'ranking',  label: '排名', width: '70'},
-    {prop: 'live',  label: '开播时间', slotName: 'live'},
-    {prop: 'user',  label: '达人', slotName: 'user'},
-    {prop: 'hotCids',  label: '热销类目'},
-    {prop: 'maxUserCount',  label: '最高观看'},
-    {prop: 'followerGrow',  label: '粉丝变化'},
-    {prop: 'lastSalesGrow',  label: '直播销量'},
-    {prop: 'lastSalesPrice',  label: '直播销售额'},
+    {prop: 'live',  label: '开播时间', slotName: 'live', width: '300'},
+    {prop: 'user',  label: '达人', slotName: 'user', width: '360'},
+    {prop: 'hotCids',  label: '热销类目', NumConfig: {filterName: 'cids', style: {
+        fontSize: '12px', fontWeight: 400, lineHeight: '16px'
+    }} },
+    {prop: 'maxUserCount',  label: '最高观看', NumConfig: {filterName: 'toWan'}},
+    {prop: 'followerGrow',  label: '粉丝变化',  NumConfig: {filterName: 'toWan'}},
+    {prop: 'lastSalesGrow',  label: '直播销量', NumConfig: {filterName: 'toWan'}},
+    {prop: 'lastSalesPrice',  label: '直播销售额', NumConfig: {filterName: 'yuanAndWan'}},
     {prop: 'op',  label: '操作', slotName: 'op'}
 ]

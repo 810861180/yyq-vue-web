@@ -20,22 +20,31 @@
                         <el-image style="width: 100%; hegiht: 100%;" :src="row.cover"></el-image>
                     </template>
                 </el-popover>
-                <div>
-                    {{row.title}}
-                </div>
-                <div>
-                    {{row.duringTime}}
+                <div style="margin-left: 8px; ">
+                    <div class="vertical" style="font-weight: bold; font-size: 14px;">{{row.title}}</div>
+                    <div style="margin-top: 4px;">
+                        <span>直播时长：</span>
+                        <span>{{row.duringTime | tablefilter('toTime')}}</span>
+                    </div>
                 </div>
             </div>
         </template>
         <template #user="{ row }">
             <div class="content-slot">
-                <img :src="row.userSimpleData.avatar_larger" class="live-cover">
-                <div>
-                    {{row.title}}
-                </div>
-                <div>
-                    {{row.duringTime}}
+                <el-image class="header-img50" :src="row.userSimpleData.avatar_larger"></el-image>
+                <div style="margin-left: 8px;">
+                    <div class="user-title">
+                        <span class="vertical" style="font-weight: bold; font-size: 14px; margin-right: 4px;">{{ row.userSimpleData.nickname }}</span>
+                        <el-tag size="mini" v-if="row.userSimpleData.user_tag">{{ row.userSimpleData.user_tag }}</el-tag>
+                    </div>
+                    <div style="margin-top: 4px;">
+                        <span>粉丝数：{{ row.userSimpleData.follower_count | toWan}}</span>
+                        |
+                        <span>
+                            <span>带货口碑：</span>
+                            <span style="font-weight: bold; font-size: 13px;color: red;">{{ row.userSimpleData.score_now_months_ago }}</span>
+                        </span>
+                    </div>
                 </div>
             </div>
         </template>
@@ -92,7 +101,7 @@ export default {
         this.getLiveHotRoomHistory();
     },
     handleInfo(row) {
-        
+        window.open(`${window.location.origin}#/addProductCate?liveId=${row.liveId}`);
     }
   },
 };
@@ -103,5 +112,15 @@ export default {
         width: 50px;
         height: 50px;
         border-radius: 10px;
+    }
+    .content-slot{
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        line-height: 16px;
+    }
+    .user-title{
+        display: flex;
+        align-items: center;
     }
 </style>

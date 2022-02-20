@@ -37,45 +37,41 @@ const formatSeconds = (value) => {
   return result;
 }
 
+// 类目表示转换
+const cids = (arr) => {
+  const data = {
+      c1: '手机数码',
+      c3: '服装饰品',
+      c4: '美妆个护',
+      c5: '运动户外',
+      c6: '电脑办公',
+      c7: '食品百货',
+      c8: '母婴玩具',
+      c9: '鞋靴箱包',
+      c11: '生活厨具',
+      c12: '家用电器',
+      c13: '图书文娱'
+  }
+  const val = arr.map(item => data[item]).join(',');
+  return val;
+}
+
 // 时间戳转日期
-// Vue.filter('toDate', value => {
-//   if (!value) return ''
-//   return _toDate(value)
-// })
 export const toDate = (value) => {
     if (!value) return ''
     return _toDate(value)
 }
 // 转化为万为单位
-// Vue.filter('toWan', value => {
-//   if (!value) return ''
-//   return _toWan(value);
-// })
 export const toWan = (value) => {
     if (!value) return ''
     return _toWan(value);
 }
 // 千分位
-// Vue.filter('toThousands', value => {
-//   if (!value) return ''
-//   return parseFloat(value).toLocaleString();
-// })
 export const toThousands = (value) => {
     if (!value) return ''
     return parseFloat(value).toLocaleString();
 }
 // 表格专用过滤器 需要传递name
-// Vue.filter('tablefilter', (value, name, replace) => {
-//   if (!value && (name !== 'replace')) return ''
-//   // 替换
-//   if (name === 'replace') return replace;
-//   if (name === 'toWan') return _toWan(value);
-//   if (name === 'centToyuan') return centToyuan(value);
-//   if (name === 'yuanAndWan') return _toWan(centToyuan(value));
-//   if (name === 'toDate') return _toDate(value);
-//   if (name === 'toTime') return formatSeconds(value);
-//   return value;
-// })
 export const tablefilter = (value, name, replace) => {
     if (!value && (name !== 'replace')) return ''
     // 替换
@@ -85,5 +81,6 @@ export const tablefilter = (value, name, replace) => {
     if (name === 'yuanAndWan') return _toWan(centToyuan(value));
     if (name === 'toDate') return _toDate(value);
     if (name === 'toTime') return formatSeconds(value);
+    if (name === 'cids') return cids(value);
     return value;
 }
