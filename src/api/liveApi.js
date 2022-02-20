@@ -24,4 +24,13 @@ export default class LiveApi {
 
     // 获取爆款直播间历史直播数据
     static getLiveHotRoomHistory = (params) => request({url: '/live/list/LiveHotRoomHistory', method:'get', params});
+    
+    // 获取带货直播榜
+    static getLiveSalesRank = (params) => request({url: '/live/list/LiveSalesRank', method:'get', params});
+    
+    // 获取品牌自播榜
+    static getLiveBrandRank = (params) => request({url: '/live/list/LiveBrandRooms', method:'get', params});
+    
+    // 获取热门商品榜
+    static getLiveProductSaleRank = (params) => request({url: '/live/list/LiveProductSaleRank', method:'get', params});
 }

@@ -63,7 +63,7 @@ export const asyncRouterMap = [
       {
         path: 'updateProduct',
         name: 'sale-live',
-        component: () => import('@/views/pms/product/update'),
+        component: () => import('@/views/alive/sale-rank/index'),
         meta: {title: '直播带货榜', icon: 'product-add'},
         hidden: true
       },
@@ -90,7 +90,7 @@ export const asyncRouterMap = [
       {
         path: 'productAttr',
         name: 'brand-live',
-        component: () => import('@/views/pms/productAttr/index'),
+        component: () => import('@/views/alive/live-brand/index'),
         meta: {title: '品牌自播榜', icon: 'product-attr'}
       },
       {
@@ -146,7 +146,7 @@ export const asyncRouterMap = [
       {
         path: 'order',
         name: 'hot-product',
-        component: () => import('@/views/oms/order/index'),
+        component: () => import('@/views/alive/hot-product/index'),
         meta: {title: '热门商品榜', icon: 'product-list'}
       },
       {

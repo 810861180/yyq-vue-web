@@ -149,7 +149,7 @@ export default {
       }).then((res) => {
         this.getCurrentData.total = res.size;
         res.data.forEach((item, index) => {
-          item.ranking = index + 1;
+          item.ranking = (index + 1) + ((this.getCurrentData.page - 1) * 10);
         });
         this.getCurrentData.tableData = res.data;
       });
