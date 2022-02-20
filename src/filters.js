@@ -8,6 +8,10 @@ const _toWan = (value) => {
 const centToyuan = (value) => {
   return (value / 100).toFixed(2);
 }
+// UV价值
+export const uv = (value) => {
+  return (value / 1000).toFixed(2);
+}
 // 时间戳转日期
 const _toDate = (value) => {
   return new Date(parseInt(value)).toLocaleString().replace(/年|月/g, '-').replace(/日/g, ' ').replace(/\//g, '-');
