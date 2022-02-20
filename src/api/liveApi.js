@@ -35,5 +35,8 @@ export default class LiveApi {
     static getLiveProductSaleRank = (params) => request({url: '/live/list/LiveProductSaleRank', method:'get', params});
 
     // 获取直播带货详情左侧信息
-    static getLiveSalesDetailLeftInfo = (params) => request({url: '/live/list/LiveSalesDetailLeftInfo', method:'get', params})
+    static getLiveSalesDetailLeftInfo = (params) => request({url: '/live/list/LiveSalesDetailLeftInfo', method:'get', params});
+
+    // 获取直播带货详情统计图表
+    static getLiveSalesDetailTotalCount = (params) => request({url: '/live/list/LiveSalesDetailTotalCount', method:'get', params});
 }

@@ -101,7 +101,7 @@ export default {
         this.getLiveHotRoomHistory();
     },
     handleInfo(row) {
-        window.open(`${window.location.origin}#/addProductCate?liveId=${row.liveId}`);
+        window.open(`${window.location.origin}#/addProductCate?liveId=${row.liveId}&img=${row.userSimpleData.avatar_larger}&nick=${row.userSimpleData.nickname}&like=${row.userSimpleData.follower_count}&account=${row.userSimpleData.unique_id}&tag=${row.userSimpleData.user_tag}`);
     }
   },
 };
