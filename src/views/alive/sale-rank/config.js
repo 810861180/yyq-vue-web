@@ -1,5 +1,5 @@
 export const rankColumn = [
-    {prop: 'ranking',  label: '排名', width: '70'},
+    {prop: 'ranking', align: 'center',  label: '排名', width: '70'},
     {prop: 'live',  label: '开播时间', slotName: 'live', width: '300'},
     {prop: 'user',  label: '达人', slotName: 'user', width: '360'},
     {prop: 'hotCids',  label: '热销类目', NumConfig: {filterName: 'cids', style: {

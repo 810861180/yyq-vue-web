@@ -169,6 +169,12 @@ a:hover {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
+.vertical_2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 .header-img50{
   min-width: 50px;
   min-height: 50px;

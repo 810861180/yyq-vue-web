@@ -7,21 +7,23 @@
         @handleCurrentChange="handleCurrentChange"
       >
         <template #user="{ row }">
-            <div class="content-slot">
-                <img :src="row.simpleDto.avatar_larger" class="live-cover">
-                <div>
-                    {{row.simpleDto.nickname}}
-                </div>
-                <div>
-                    {{row.duringTime}}
-                </div>
-                <div>
-                    粉丝数：{{row.simpleDto.follower_count}}
-                </div>
-                <div>
-                    带货口碑{{row.simpleDto.score_now_months_ago}}
-                </div>
+          <div class="content-slot">
+            <el-image class="header-img50" :src="row.simpleDto.avatar_larger"></el-image>
+            <div style="margin-left: 8px;">
+              <div class="user-title">
+                <span class="vertical" style="font-weight: bold; font-size: 14px; margin-right: 4px;">{{ row.simpleDto.nickname }}</span>
+<!--                <el-tag size="mini" v-if="row.userSimpleData.user_tag">{{ row.userSimpleData.user_tag }}</el-tag>-->
+              </div>
+              <div style="margin-top: 4px;">
+                <span>粉丝数：{{ row.simpleDto.follower_count | toWan}}</span>
+                |
+                <span>
+                            <span>带货口碑：</span>
+                            <span style="font-weight: bold; font-size: 13px;color: red;">{{ row.simpleDto.score_now_months_ago }}</span>
+                        </span>
+              </div>
             </div>
+          </div>
         </template>
         <template #op="{ row }">
             <el-button size="mini" type="primary" @click="handleInfo(row)"
@@ -76,7 +78,7 @@ export default {
         this.getLiveHotRoomHistory();
     },
     handleInfo(row) {
-        
+
     }
   },
 };
@@ -87,5 +89,11 @@ export default {
         width: 50px;
         height: 50px;
         border-radius: 10px;
+    }
+    .content-slot{
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      line-height: 16px;
     }
 </style>
