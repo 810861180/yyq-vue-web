@@ -5,6 +5,7 @@
         style="width: 100%">
         <el-table-column
           v-for="item in tableColumn"
+          :align="item.align || 'left'"
           :key="item.prop"
           :prop="item.prop"
           :label="item.label"
