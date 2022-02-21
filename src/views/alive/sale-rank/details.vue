@@ -9,9 +9,9 @@
                 <el-image style="width: 80px; height: 80px;" :src="leftData.cover"></el-image>
                 <div style="margin-left: 12px;">
                     <div class="vertical" style="font-weight: bold; font-size: 14px;">{{ leftData.title }}</div>
-                    <div style="color: #606266">开播时长：{{ leftData.duringTime }}</div>
-                    <div style="color: #606266">开播时间：{{ leftData.createTime }}</div>
-                    <div style="color: #606266">下播时间：{{ leftData.finishTime }}</div>
+                    <div style="color: #606266">开播时长：{{ leftData.duringTime | tablefilter('toTime') }}</div>
+                    <div style="color: #606266">开播时间：{{ leftData.createTime | toDate }}</div>
+                    <div style="color: #606266">下播时间：{{ leftData.finishTime | toDate }}</div>
                     <!-- <div>
                         <span style="color: #606266">带货口碑：</span><span style="color: red; font-weight: bold;">3.55</span>
                     </div> -->
@@ -117,7 +117,27 @@
         <div class="right">
             <el-card>
                 <h3>流量趋势</h3>
-                <div id="flowChart" style="width: 100%; height: 500px;"></div>
+                <div id="flowChart" style="width: 100%; height: 400px;"></div>
+            </el-card>
+            <el-card style="margin-top: 20px;">
+                <div class="charts">
+                    <div class="item">
+                        <h3>累计观看人次趋势</h3>
+                        <div class="item-chart" id="totalUser"></div>
+                    </div>
+                    <div class="item">
+                        <h3>直播间点赞趋势</h3>
+                        <div class="item-chart" id="likeCount"></div>
+                    </div>
+                    <div class="item">
+                        <h3>直播间涨粉趋势</h3>
+                        <div class="item-chart" id="followerCount"></div>
+                    </div>
+                    <div class="item">
+                        <h3>粉丝团趋势</h3>
+                        <div class="item-chart" id="userTicketCount"></div>
+                    </div>
+                </div>
             </el-card>
         </div>
     </div>
@@ -131,7 +151,18 @@ export default {
     data() {
         return {
             leftData: {},
-            flowChartData: {data: [], data2: []},
+            flowChartData: {
+                currentUserCount: [], // 流量趋势-在线人数
+                enterCount: [], // 	流量趋势-进场人数
+                followerCount: [], // 涨粉趋势-当日总量
+                increase_followerCount: [], // 涨粉趋势-增量
+                likeCount: [], // 	点赞趋势
+                increase_likeCount: [], // 	点赞趋势-增量
+                totalUser: [], // 累计观看人次--当日总量
+                increase_totalUser: [], // 累计观看人次--增量
+                userTicketCount: [], // 粉丝团趋势-当日总量
+                increase_userTicketCount: [], // 粉丝团趋势-增量
+            },
         }
     },
     mounted() {
@@ -145,54 +176,73 @@ export default {
                 this.leftData = res.data;
             })
         },
-        getLiveSalesDetailTotalCount() {
-            LiveApi.getLiveSalesDetailTotalCount({liveId: this.$route.query.liveId}).then(res => {
-                const arrs = {
-                    data: [],
-                    data2: []
-                }
-                for (const key in res.data) {
-                    arrs.data.push([toDate(key), Number(res.data[key].enterCount) ]);
-                    arrs.data2.push([toDate(key), Number(res.data[key].currentUserCount) ]);
-                }
-                this.flowChartData = arrs;
-                this.flowChart();
+        // 增量计算
+        increaseNum(arr) {
+            return arr.map((item, index) => {
+                if(index === 0) return [item[0], 0];
+                const yesterday = arr[index - 1]; // 昨日数据
+                return [item[0], item[1] - yesterday[1]];
             })
         },
+        // 计算数据最大值和最小值
+        getMaxAndMin(arr) {
+            const value = arr.map(item => item[1]);
+            Array.prototype.max = function() {
+                return Math.max.apply({}, this)
+            }
+            Array.prototype.min = function() {
+                return Math.min.apply({}, this)
+            }
+            return {
+                max: value.max(),
+                min: value.min()
+            }
+        },
+        getLiveSalesDetailTotalCount() {
+            LiveApi.getLiveSalesDetailTotalCount({liveId: this.$route.query.liveId}).then(res => {
+                // 四个小图表的key
+                const keys = ['totalUser', 'likeCount', 'followerCount', 'userTicketCount']
+                for (const key in res.data) {
+                    this.flowChartData.enterCount.push([toDate(key), Number(res.data[key].enterCount) ]);
+                    this.flowChartData.currentUserCount.push([toDate(key), Number(res.data[key].currentUserCount) ]);
+                    keys.forEach(item => {
+                        this.flowChartData[item].push([ toDate(key), Number(res.data[key][item]) ]);
+                    })
+                }
+                keys.forEach(item => {
+                    this.flowChartData[`increase_${item}`] = this.increaseNum(this.flowChartData[item]);
+                })
+                // 大图表
+                this.flowChart();
+                // 四个小图表
+                keys.forEach(item => {
+                    this.allChart(item, this.flowChartData[item], this.flowChartData[`increase_${item}`])
+                })
+            })
+        },
+        // 流量趋势方法
         flowChart() {
             var chartDom = document.getElementById('flowChart');
             var myChart = echarts.init(chartDom);
             var option;
 
-            let data = this.flowChartData.data;
-            let data2 = this.flowChartData.data2;
+            let data = this.flowChartData.currentUserCount;
+            let data2 = this.flowChartData.enterCount;
 
             option = {
-                // title: {
-                //     left: 'center',
-                //     text: 'Tootip and dataZoom on Mobile Device'
-                // },
+                // 图样的名称
                 legend: {
                     left: 'right',
                     data: ['进场人数', '在线人数']
                 },
+                // 图标的tip提示
                 tooltip: {
                     triggerOn: 'none',
                     position: function (pt) {
                         return [pt[0], 130];
                     }
                 },
-                // toolbox: {
-                //     left: 'center',
-                //     itemSize: 25,
-                //     top: 55,
-                //     feature: {
-                //     dataZoom: {
-                //         yAxisIndex: 'none'
-                //     },
-                //     restore: {}
-                //     }
-                // },
+                // 设置X轴的样式
                 xAxis: {
                     type: 'time',
                     axisPointer: {
@@ -218,6 +268,7 @@ export default {
                         show: false
                     }
                 },
+                // 设置Y轴的样式
                 yAxis: {
                     type: 'value',
                     axisTick: {
@@ -232,18 +283,21 @@ export default {
                     },
                     z: 10
                 },
+                // 图表距离边框的位置
                 grid: {
-                    top: 110,
-                    left: 15,
-                    right: 15,
-                    height: 160
+                    top: 60,
+                    left: 25,
+                    right: 25,
+                    height: 200
                 },
+                // 放大倍数
                 dataZoom: [
                     {
                         type: 'inside',
                         throttle: 50
                     }
                 ],
+                // 设置每条曲线的数据和样式
                 series: [
                     {
                         name: '进场人数',
@@ -297,10 +351,156 @@ export default {
                     }
                 ]
             };
-
             option && myChart.setOption(option);
+        },
 
-        }
+        // 批量处理
+        allChart(id, data, data2) {
+            var chartDom = document.getElementById(id);
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                legend: {
+                    data: ['总量', '增量']
+                },
+                tooltip: {
+                    triggerOn: 'none',
+                    position: function (pt) {
+                        return [pt[0], 130];
+                    }
+                },
+                xAxis: {
+                    type: 'time',
+                    axisTick: {
+                        length: 10
+                    },
+                    axisPointer: {
+                        value: '2016-10-7',
+                        snap: true,
+                        lineStyle: {
+                            color: '#7581BD',
+                            width: 2
+                        },
+                        label: {
+                            show: true,
+                            formatter: function (params) {
+                                console.log(params)
+                                return echarts.format.formatTime('yyyy-MM-dd hh:mm', params.value);
+                            },
+                            backgroundColor: '#7581BD'
+                        },
+                        handle: {
+                            show: true,
+                            color: '#7581BD'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '总量',
+                        min: this.getMaxAndMin(data).min,
+                        max: this.getMaxAndMin(data).max,
+                        axisTick: {
+                            length: 6,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            inside: true,
+                            formatter: '{value}\n'
+                        }
+                    },
+                    {
+                        type: 'value',
+                        name: '增量',
+                        min: this.getMaxAndMin(data2).min,
+                        max: this.getMaxAndMin(data2).max,
+                        axisTick: {
+                            length: 6,
+                            lineStyle: {
+                                type: 'dashed'
+                            }
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            inside: true,
+                            formatter: '{value}\n'
+                        }
+                    }
+                ],
+                grid: {
+                    top: 100,
+                    left: 25,
+                    right: 25,
+                    height: 200
+                },
+                dataZoom: [
+                    {
+                        type: 'inside',
+                        throttle: 50
+                    }
+                ],
+                series: [
+                    {
+                        name: '总量',
+                        type: 'line',
+                        yAxisIndex: 0,
+                        smooth: true,
+                        itemStyle: {
+                            color: '#0770FF'
+                        },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                {
+                                    offset: 0,
+                                    color: 'rgba(58,77,233,0.3)'
+                                },
+                                {
+                                    offset: 1,
+                                    color: 'rgba(58,77,233,0.1)'
+                                }
+                            ])
+                        },
+                        data: data
+                    },
+                    {
+                        name: '增量',
+                        type: 'line',
+                        yAxisIndex: 1,
+                        smooth: true,
+                        itemStyle: {
+                            color: '#F2597F'
+                        },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                {
+                                    offset: 0,
+                                    color: 'rgba(213,72,120,0.3)'
+                                },
+                                {
+                                    offset: 1,
+                                    color: 'rgba(213,72,120,0.1)'
+                                }
+                            ])
+                        },
+                        data: data2
+                    }
+                ]
+            };
+            option && myChart.setOption(option);
+            
+        },
     }
 }
 </script>
@@ -358,6 +558,22 @@ export default {
         .right{
             flex: 1;
             margin-left: 20px;
+            overflow: auto;
+            .charts{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                .item{
+                    width: 48%;
+                    height: 440px;
+                    margin-bottom: 20px;
+                    .item-chart{
+                        width: 100%;
+                        height: 380px;
+                    }
+                }
+            }
         }
     }
+    
 </style>
