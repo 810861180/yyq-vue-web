@@ -24,13 +24,13 @@ export default class LiveApi {
 
     // 获取爆款直播间历史直播数据
     static getLiveHotRoomHistory = (params) => request({url: '/live/list/LiveHotRoomHistory', method:'get', params});
-    
+
     // 获取带货直播榜
     static getLiveSalesRank = (params) => request({url: '/live/list/LiveSalesRank', method:'get', params});
-    
+
     // 获取品牌自播榜
     static getLiveBrandRank = (params) => request({url: '/live/list/LiveBrandRooms', method:'get', params});
-    
+
     // 获取热门商品榜
     static getLiveProductSaleRank = (params) => request({url: '/live/list/LiveProductSaleRank', method:'get', params});
 
@@ -39,4 +39,16 @@ export default class LiveApi {
 
     // 获取直播带货详情统计图表
     static getLiveSalesDetailTotalCount = (params) => request({url: '/live/list/LiveSalesDetailTotalCount', method:'get', params});
+
+    // 获取爆款直播间左侧信息
+    static getLiveHotRoomDetailLeftInfo = (params) => request({url: '/live/list/LiveHotRoomDetailLeftInfo', method:'get', params});
+
+    // 获取爆款直播间统计图表
+    static getLiveHotRoomDetailTotalCount = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCount', method:'get', params});
+
+    // 获取品牌自播左侧信息
+    static getLiveBrandDetailLeftInfo = (params) => request({url: '/live/list/LiveBrandDetailLeftInfo', method:'get', params});
+
+    // 获取爆款直播间统计图表
+    // static getLiveHotRoomDetailTotalCount = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCount', method:'get', params});
 }

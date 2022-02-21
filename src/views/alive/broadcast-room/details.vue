@@ -9,9 +9,9 @@
                 <el-image style="width: 80px; height: 80px;" :src="leftData.cover"></el-image>
                 <div style="margin-left: 12px;">
                     <div class="vertical" style="font-weight: bold; font-size: 14px;">{{ leftData.title }}</div>
-                    <div style="color: #606266">开播时长：{{ leftData.duringTime }}</div>
-                    <div style="color: #606266">开播时间：{{ leftData.createTime }}</div>
-                    <div style="color: #606266">下播时间：{{ leftData.finishTime }}</div>
+                    <div style="color: #606266">开播时长：{{ leftData.duringTime | tablefilter('toTime')}}</div>
+                    <div style="color: #606266">开播时间：{{ leftData.createTime | toDate }}</div>
+                    <div style="color: #606266">下播时间：{{ leftData.finishTime | toDate }}</div>
                     <!-- <div>
                         <span style="color: #606266">带货口碑：</span><span style="color: red; font-weight: bold;">3.55</span>
                     </div> -->
@@ -135,22 +135,23 @@ export default {
         }
     },
     mounted() {
-        this.getLiveSalesDetailLeftInfo();
-        this.getLiveSalesDetailTotalCount();
+        this.getLiveHotRoomDetailLeftInfo();
+        this.getLiveHotRoomDetailTotalCount();
         this.flowChart();
     },
     methods: {
-        getLiveSalesDetailLeftInfo() {
-            LiveApi.getLiveSalesDetailLeftInfo({liveId: this.$route.query.liveId}).then(res => {
+      getLiveHotRoomDetailLeftInfo() {
+            LiveApi.getLiveHotRoomDetailLeftInfo({liveId: this.$route.query.liveId}).then(res => {
                 this.leftData = res.data;
             })
         },
-        getLiveSalesDetailTotalCount() {
-            LiveApi.getLiveSalesDetailTotalCount({liveId: this.$route.query.liveId}).then(res => {
+      getLiveHotRoomDetailTotalCount() {
+            LiveApi.getLiveHotRoomDetailTotalCount({liveId: this.$route.query.liveId}).then(res => {
                 const arrs = {
                     data: [],
                     data2: []
                 }
+                console.log(res.data)
                 for (const key in res.data) {
                     arrs.data.push([toDate(key), Number(res.data[key].enterCount) ]);
                     arrs.data2.push([toDate(key), Number(res.data[key].currentUserCount) ]);
@@ -166,8 +167,6 @@ export default {
 
             let data = this.flowChartData.data;
             let data2 = this.flowChartData.data2;
-            console.log(data)
-            console.log(data2)
             option = {
                 // title: {
                 //     left: 'center',

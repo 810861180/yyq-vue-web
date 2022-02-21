@@ -3,15 +3,15 @@
         <div class="room-content">
             <el-timeline>
                 <el-timeline-item
-                v-for="(item, index) in roomList" 
+                v-for="(item, index) in roomList"
                 :key="index"
                 placement="top"
                 :timestamp="item[0].date">
                 <div class="room-content">
-                    <roomCard 
+                    <roomCard
                         @handleRecord="handleRecord"
-                        :roomInfo="room.data" 
-                        v-for="room in item"  
+                        :roomInfo="room.data"
+                        v-for="room in item"
                         :key="room.data.liveId">
                     </roomCard>
                 </div>
@@ -60,7 +60,6 @@ export default {
             Object.keys(data).forEach(key => {
                 this.roomList.push(data[key]);
             })
-            console.log(this.roomList);
         })
     },
     methods: {

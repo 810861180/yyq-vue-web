@@ -26,7 +26,6 @@ const percent = (value) => {
 }
 // 增量显示
 const rankingIncrement = (value) => {
-  console.log(value)
   if (value >= 1) {
     return "▲" + value;
   } else if(value < 0){

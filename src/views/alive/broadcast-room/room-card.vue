@@ -86,7 +86,7 @@ export default {
             align-items: center;
             justify-content: center;
         }
-        
+
         .room-data{
             display: flex;
             justify-content: space-between;

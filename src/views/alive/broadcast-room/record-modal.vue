@@ -97,7 +97,8 @@ export default {
         this.getLiveHotRoomHistory();
     },
     handleInfo(row) {
-        
+      window.open(`${window.location.origin}#/productCate?liveId=${row.liveId}&img=${this.recordData.user.avatar_larger}&nick=${this.recordData.user.nickname}&like=${this.recordData.user.follower_count}&account=${this.recordData.user.unique_id}&tag=${this.recordData.user.user_tag}`);
+
     }
   },
 };

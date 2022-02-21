@@ -48,6 +48,19 @@ export const asyncRouterMap = [
     meta: {title: '直播风车榜'}
   },
   {
+    path: '/productCate',
+    name: 'drainage-live',
+    component: () => import('@/views/alive/broadcast-room/details'),
+    meta: {title: '直播引流榜', icon: 'product-cate'}
+  },
+  {
+    path: '/updateProductCate',
+    name: 'search-live',
+    component: () => import('@/views/alive/live-brand/details'),
+    meta: {title: '直播搜索'},
+    hidden: true
+  },
+  {
     path: '/pms',
     component: Layout,
     redirect: '/pms/product',
@@ -73,12 +86,6 @@ export const asyncRouterMap = [
         meta: {title: '直播带货榜', icon: 'product-add'},
         hidden: true
       },
-      {
-        path: 'productCate',
-        name: 'drainage-live',
-        component: () => import('@/views/pms/productCate/index'),
-        meta: {title: '直播引流榜', icon: 'product-cate'}
-      },
       // {
       //   path: 'addProductCate',
       //   name: 'windmill-live',
@@ -86,13 +93,6 @@ export const asyncRouterMap = [
       //   meta: {title: '直播风车榜'},
       //   hidden: true
       // },
-      {
-        path: 'updateProductCate',
-        name: 'search-live',
-        component: () => import('@/views/pms/productCate/update'),
-        meta: {title: '直播搜索'},
-        hidden: true
-      },
       {
         path: 'productAttr',
         name: 'brand-live',
@@ -159,7 +159,7 @@ export const asyncRouterMap = [
         path: 'orderDetail',
         name: 'sale-video',
         component: () => import('@/views/oms/order/orderDetail'),
-        meta: {title: '带货视频榜'},
+        meta: {title: '飙升视频榜'},
         hidden: true
       },
       {
