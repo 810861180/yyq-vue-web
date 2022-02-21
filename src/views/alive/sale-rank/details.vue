@@ -9,9 +9,9 @@
                 <el-image style="width: 80px; height: 80px;" :src="leftData.cover"></el-image>
                 <div style="margin-left: 12px;">
                     <div class="vertical" style="font-weight: bold; font-size: 14px;">{{ leftData.title }}</div>
-                    <div style="color: #606266">开播时长：{{ leftData.duringTime }}</div>
-                    <div style="color: #606266">开播时间：{{ leftData.createTime }}</div>
-                    <div style="color: #606266">下播时间：{{ leftData.finishTime }}</div>
+                    <div style="color: #606266">开播时长：{{ leftData.duringTime | tablefilter('toTime') }}</div>
+                    <div style="color: #606266">开播时间：{{ leftData.createTime | toDate }}</div>
+                    <div style="color: #606266">下播时间：{{ leftData.finishTime | toDate }}</div>
                     <!-- <div>
                         <span style="color: #606266">带货口碑：</span><span style="color: red; font-weight: bold;">3.55</span>
                     </div> -->
@@ -166,8 +166,7 @@ export default {
 
             let data = this.flowChartData.data;
             let data2 = this.flowChartData.data2;
-            console.log(data)
-            console.log(data2)
+
             option = {
                 // title: {
                 //     left: 'center',
