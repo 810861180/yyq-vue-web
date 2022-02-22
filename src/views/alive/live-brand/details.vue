@@ -7,12 +7,14 @@
       </div> -->
       <div class="head-name">小店信息</div>
       <div class="left-header">
-        <el-image style="width: 80px; height: 80px;" :src="leftData.shopLogo"></el-image>
+        <el-image style="width: 80px; height: 80px;" class="header-img50" :src="leftData.shopLogo"></el-image>
         <div style="margin-left: 12px;">
           <div class="vertical" style="font-weight: bold; font-size: 14px;">{{ leftData.shopName }}</div>
           <div style="color: #606266">当前在售商品数：{{ leftData.onSellGoodsCount }}</div>
           <div>
-            <el-tag size="mini" v-for="item in JSON.parse($route.query.cids)" :key="item">{{ [item] | tablefilter('cids') }}</el-tag>
+            <el-tag size="mini" v-for="item in JSON.parse($route.query.cids)" :key="item">{{ [item] |
+              tablefilter('cids') }}
+            </el-tag>
           </div>
 
         </div>
@@ -33,98 +35,58 @@
           </div>
         </div>
       </el-card>
-      <el-card class="box-card">
-        <h3>进场流量</h3>
-        <div class="left-data">
-          <div class="item">
-            <div>观看人次</div>
-            <div class="value">{{ leftData.totalUser | toWan }}</div>
-          </div>
-          <div class="item">
-            <div>平均在线</div>
-            <div class="value">{{ leftData.avgCurrentUser }}</div>
-          </div>
-          <div class="item">
-            <div>在线峰值</div>
-            <div class="value">{{ leftData.maxUserCount }}</div>
-          </div>
-          <div class="item">
-            <div>平均观看时长</div>
-            <div class="value">{{ (Number(leftData.avgCurrentUserTime) * 1000) | tablefilter('toTime') }}</div>
-          </div>
-        </div>
-      </el-card>
       <el-card class="box-card" style="margin-top: 20px;">
         <h3>带货转化</h3>
         <div class="left-data">
           <div class="item">
-            <div>销售额</div>
-            <div class="value">￥{{ leftData.lastSalesPrice | tablefilter('yuanAndWan') }}</div>
-          </div>
-          <div class="item">
             <div>销量</div>
-            <div class="value">{{ leftData.lastSalesGrow | toWan }}</div>
+            <div class="value">{{ leftData.sellNum | toWan }}</div>
           </div>
           <div class="item">
-            <div>商品数</div>
-            <div class="value">{{ leftData.goodsCount }}</div>
+            <div>销售额</div>
+            <div class="value">￥{{ leftData.sellPrice | tablefilter('yuanAndWan') }}</div>
           </div>
         </div>
         <div class="divder" style="margin: -12px 0 12px 0;"></div>
         <div class="left-data">
           <div class="item">
-            <div>GPM</div>
-            <div class="value">￥{{ leftData.gmp | tablefilter('centToyuan') }}</div>
+            <div>推广商品</div>
+            <div class="value">{{ leftData.goodsCount  }}</div>
           </div>
           <div class="item">
-            <div>UV价值</div>
-            <div class="value">{{ leftData.gmp | tablefilter('centToyuan') | uv}}</div>
+            <div>佣金比例</div>
+            <div class="value">{{ leftData.cosFeeRate | tablefilter('percent')}}</div>
           </div>
           <div class="item">
             <div>客单价</div>
-            <div class="value">{{ leftData.perPeoplePrice | tablefilter('centToyuan')}}</div>
+            <div class="value">￥{{ leftData.perCustomerPrice | tablefilter('centToyuan')}}</div>
           </div>
         </div>
         <div class="divder" style="margin: -12px 0 12px 0;"></div>
         <div class="left-data">
           <div class="item">
-            <div>坑位效益</div>
-            <div class="value">￥{{ leftData.pitEarnings | tablefilter('centToyuan') | toWan }}</div>
+            <div>带货视频</div>
+            <div class="value">￥{{ leftData.videoCount  }}</div>
           </div>
           <div class="item">
-            <div>购买转化</div>
-            <div class="value">{{ leftData.buyConversion | tablefilter('percent')}}</div>
+            <div>带货直播</div>
+            <div class="value">{{ leftData.liveCount }}</div>
           </div>
-        </div>
-      </el-card>
-      <el-card class="box-card" style="margin-top: 20px;">
-        <h3>流量转化</h3>
-        <div class="left-data">
           <div class="item">
-            <div>单场涨粉</div>
-            <div class="value">{{ leftData.followerGrow }}</div>
-          </div>
-          <!-- <div class="item">
-              <div>转粉率</div>
-              <div class="value">{{ leftData.avgCurrentUser }}</div>
-          </div> -->
-          <div class="item">
-            <div>点赞数</div>
-            <div class="value">{{ leftData.likeCount }}</div>
+            <div>带货达人</div>
+            <div class="value">{{ leftData.userCount }}</div>
           </div>
         </div>
       </el-card>
       <div class="box-card">
-        <h3>作者信息</h3>
+        <h3>绑定达人</h3>
         <div style="display: flex;">
-          <img :src="$route.query.img" class="header-img50" style="margin-right: 12px;">
+          <img :src="leftData.simpleDto[0].avatar_larger " class="header-img50" style="margin-right: 12px;">
           <div>
-            <div>
-              <span style="font-weight: bold;">{{ $route.query.nick }}</span>
-              <el-tag size="mini">{{ $route.query.tag }}</el-tag>
+            <div style="margin-top: 10px;">
+              <span style="font-weight: bold;">{{ leftData.simpleDto[0].nickname }}</span>
             </div>
-            <div style="margin-top: 4px;">账号：{{ $route.query.account }}</div>
-            <div style="margin-top: 4px;">粉丝数：{{ $route.query.like | toWan }}</div>
+            <div style="margin-top: 10px;">粉丝数：{{ leftData.simpleDto[0].follower_count | toWan }}</div>
           </div>
         </div>
       </div>
@@ -159,6 +121,11 @@
       getLiveBrandDetailLeftInfo() {
         LiveApi.getLiveBrandDetailLeftInfo({userId: this.$route.query.userId}).then(res => {
           this.leftData = res.data;
+        })
+      },
+      LiveBrandDetailNewData() {
+        LiveApi.LiveBrandDetailNewData({userId: this.$route.query.userId}).then(res => {
+          this.newData = res.data;
         })
       },
       getLiveHotRoomDetailTotalCount() {
@@ -348,6 +315,7 @@
         align-items: center;
         width: 90%;
         margin: 0 auto;
+        margin-bottom: 10px;
       }
 
       .divder {
@@ -377,6 +345,7 @@
           font-weight: bold;
           font-size: 17px;
         }
+
         .value-pink {
           color: #db396c;
         }

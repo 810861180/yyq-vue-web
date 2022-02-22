@@ -49,6 +49,9 @@ export default class LiveApi {
     // 获取品牌自播左侧信息
     static getLiveBrandDetailLeftInfo = (params) => request({url: '/live/list/LiveBrandDetailLeftInfo', method:'get', params});
 
+    // 获取品牌新增信息
+    static LiveBrandDetailNewData = (params) => request({url: '/live/list/LiveBrandDetailNewData', method:'get', params});
+
     // 获取爆款直播间统计图表
     // static getLiveHotRoomDetailTotalCount = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCount', method:'get', params});
 }
