@@ -158,7 +158,7 @@ export const asyncRouterMap = [
       {
         path: 'orderDetail',
         name: 'sale-video',
-        component: () => import('@/views/oms/order/orderDetail'),
+        component: () => import('@/views/alive/rise-example/index'),
         meta: {title: '飙升视频榜'},
         hidden: true
       },

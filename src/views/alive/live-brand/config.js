@@ -13,3 +13,7 @@ export const rankColumn = [
   },
   {prop: 'op', label: '操作', slotName: 'op'}
 ]
+
+export const toDate = (value) => {
+  return new Date(parseInt(value)).toLocaleString().replace(/年|月/g, '-').replace(/日/g, ' ').replace(/\//g, '-');
+}
