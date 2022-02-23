@@ -52,6 +52,12 @@ export default class LiveApi {
     // 获取飙升视频榜
     static getLiveVideoHot = (params) => request({url: '/live/list/LiveVideoHot', method:'get', params});
 
+    // 获取爆款直播详情图表统计流量来源总数据
+    static getLiveHotRoomDetailTotalCountFlowTotal = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCountFlowTotal', method:'get', params});
+
+    // 获取爆款直播详情图表统计流量来源总数据
+    static getLiveHotRoomDetailTotalCountFlow = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCountFlow', method:'get', params});
+
     // 获取爆款直播间统计图表
     // static getLiveHotRoomDetailTotalCount = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCount', method:'get', params});
 }
