@@ -61,6 +61,13 @@ export const asyncRouterMap = [
     hidden: true
   },
   {
+    path: '/productAttrList',
+    name: 'study-live',
+    component: () => import('@/views/alive/hot-product/details'),
+    meta: {title: '学浪榜单'},
+    hidden: true
+  },
+  {
     path: '/pms',
     component: Layout,
     redirect: '/pms/product',
@@ -98,13 +105,6 @@ export const asyncRouterMap = [
         name: 'brand-live',
         component: () => import('@/views/alive/live-brand/index'),
         meta: {title: '品牌自播榜', icon: 'product-attr'}
-      },
-      {
-        path: 'productAttrList',
-        name: 'study-live',
-        component: () => import('@/views/pms/productAttr/productAttrList'),
-        meta: {title: '学浪榜单'},
-        hidden: true
       },
       {
         path: 'addProductAttr',

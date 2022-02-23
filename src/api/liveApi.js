@@ -49,6 +49,9 @@ export default class LiveApi {
     // 获取品牌自播左侧信息
     static getLiveBrandDetailLeftInfo = (params) => request({url: '/live/list/LiveBrandDetailLeftInfo', method:'get', params});
 
+    // 获取品牌新增信息
+    static LiveBrandDetailNewData = (params) => request({url: '/live/list/LiveBrandDetailNewData', method:'get', params});
+
     // 获取飙升视频榜
     static getLiveVideoHot = (params) => request({url: '/live/list/LiveVideoHot', method:'get', params});
 
@@ -57,6 +60,12 @@ export default class LiveApi {
 
     // 获取爆款直播详情图表统计流量来源总数据
     static getLiveHotRoomDetailTotalCountFlow = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCountFlow', method:'get', params});
+
+    // 获取热门商品详情
+    static getLiveProductDetailLeftInfo = (params) => request({url: '/live/list/getLiveProductDetailLeftInfo', method:'get', params});
+
+    // 获取热门商品统计
+    static getLiveProductDetailTopTotalCount = (params) => request({url: '/live/list/LiveProductDetailTopTotalCount', method:'get', params});
 
     // 获取爆款直播间统计图表
     // static getLiveHotRoomDetailTotalCount = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCount', method:'get', params});

@@ -5,33 +5,28 @@
           <span>数据更新时间</span>
           <span>2023213123</span>
       </div> -->
-      <div class="head-name">小店信息</div>
+      <div class="head-name">商品信息</div>
       <div class="left-header">
-        <el-image style="width: 80px; height: 80px;" class="header-img50" :src="leftData.shopLogo"></el-image>
+        <el-image style="width: 80px; height: 80px;" :src="leftData.image"></el-image>
         <div style="margin-left: 12px;">
-          <div class="vertical" style="font-weight: bold; font-size: 14px;">{{ leftData.shopName }}</div>
-          <div style="color: #606266">当前在售商品数：{{ leftData.onSellGoodsCount }}</div>
-          <div>
-            <el-tag size="mini" v-for="item in JSON.parse($route.query.cids)" :key="item">{{ [item] |
-              tablefilter('cids') }}
-            </el-tag>
-          </div>
+          <div class="vertical" style="font-weight: bold; font-size: 14px;">{{ leftData.title }}</div>
+<!--          <div style="color: #606266">当前在售商品数：{{ leftData.onSellGoodsCount }}</div>-->
 
         </div>
       </div>
       <el-card class="box-card">
         <div class="left-data">
           <div class="item">
-            <div class="value value-pink">{{ leftData.dsrInfoPublicPraise}}</div>
-            <div>用户口碑</div>
+            <div class="value value-orange">￥{{ leftData.price | tablefilter('centToyuan')}} </div>
+            <div>价格</div>
           </div>
           <div class="item">
-            <div class="value value-pink">{{ leftData.dsrInfoLogistics }}</div>
-            <div>发货速度</div>
+            <div class="value value-orange">￥{{ leftData.cosFee | tablefilter('centToyuan') }} <span>[{{leftData.cosFeeScale}}]</span></div>
+            <div>预估佣金</div>
           </div>
           <div class="item">
-            <div class="value value-pink">{{ leftData.dsrInfoLogistics }}</div>
-            <div>服务态度</div>
+            <div class="value value-pink">{{ leftData.platformSales | tablefilter('_toWan') }}</div>
+            <div>全网销量</div>
           </div>
         </div>
       </el-card>
@@ -39,54 +34,47 @@
         <h3>带货转化</h3>
         <div class="left-data">
           <div class="item">
-            <div>销量</div>
-            <div class="value">{{ leftData.sellNum | toWan }}</div>
+            <div>订单量</div>
+            <div class="value">{{ $route.query.orderCount | toWan }}</div>
           </div>
           <div class="item">
-            <div>销售额</div>
-            <div class="value">￥{{ leftData.sellPrice | tablefilter('yuanAndWan') }}</div>
-          </div>
-        </div>
-        <div class="divder" style="margin: -12px 0 12px 0;"></div>
-        <div class="left-data">
-          <div class="item">
-            <div>推广商品</div>
-            <div class="value">{{ leftData.goodsCount  }}</div>
+            <div>转化率</div>
+            <div class="value">￥{{ $route.query.conversionRate  }}</div>
           </div>
           <div class="item">
-            <div>佣金比例</div>
-            <div class="value">{{ leftData.cosFeeRate | tablefilter('percent')}}</div>
-          </div>
-          <div class="item">
-            <div>客单价</div>
-            <div class="value">￥{{ leftData.perCustomerPrice | tablefilter('centToyuan')}}</div>
+            <div>推广次数</div>
+            <div class="value">￥{{ $route.query.promotionCount | toWan }}</div>
           </div>
         </div>
-        <div class="divder" style="margin: -12px 0 12px 0;"></div>
+      </el-card>
+      <el-card class="box-card" style="margin-top: 20px;">
+        <h3>数据概况</h3>
         <div class="left-data">
           <div class="item">
-            <div>带货视频</div>
-            <div class="value">￥{{ leftData.videoCount  }}</div>
+            <div>关联直播场次</div>
+            <div class="value">{{ leftData.userCount | tablefilter('yuanAndWan')  }}</div>
           </div>
           <div class="item">
-            <div>带货直播</div>
-            <div class="value">{{ leftData.liveCount }}</div>
-          </div>
-          <div class="item">
-            <div>带货达人</div>
+            <div>关联达人</div>
             <div class="value">{{ leftData.userCount }}</div>
+          </div>
+          <div class="item">
+            <div>关联视频</div>
+            <div class="value">￥{{ leftData.userCount }}</div>
           </div>
         </div>
       </el-card>
       <div class="box-card">
-        <h3>绑定达人</h3>
+        <h3>店铺信息</h3>
         <div style="display: flex;">
-          <img :src="leftData.simpleDto[0].avatar_larger " class="header-img50" style="margin-right: 12px;">
+          <img :src="leftData.storeGoodsData.shop_logo " class="header-img50" style="margin-right: 12px;">
           <div>
             <div style="margin-top: 10px;">
-              <span style="font-weight: bold;">{{ leftData.simpleDto[0].nickname }}</span>
+              <span style="font-weight: bold;">{{ leftData.storeGoodsData.shop_name }}</span>
             </div>
-            <div style="margin-top: 10px;">粉丝数：{{ leftData.simpleDto[0].follower_count | toWan }}</div>
+            <div style="margin-top: 10px;">用户口碑：{{ leftData.storeGoodsData.dsr_info_logistics | toWan }}</div>
+            <div style="margin-top: 10px;">发货速度：{{ leftData.storeGoodsData.dsr_info_logistics | toWan }}</div>
+            <div style="margin-top: 10px;">服务态度：{{ leftData.storeGoodsData.dsr_info_logistics | toWan }}</div>
           </div>
         </div>
       </div>
@@ -113,23 +101,18 @@
       }
     },
     mounted() {
-      this.getLiveBrandDetailLeftInfo();
-      this.getLiveHotRoomDetailTotalCount();
-      this.flowChart();
+      this.getLiveProductDetailLeftInfo();
+      // this.getLiveProductDetailTopTotalCount();
+      // this.flowChart();
     },
     methods: {
-      getLiveBrandDetailLeftInfo() {
-        LiveApi.getLiveBrandDetailLeftInfo({userId: this.$route.query.userId}).then(res => {
+      getLiveProductDetailLeftInfo() {
+        LiveApi.getLiveProductDetailLeftInfo({goodId: this.$route.query.goodsId}).then(res => {
           this.leftData = res.data;
         })
       },
-      LiveBrandDetailNewData() {
-        LiveApi.LiveBrandDetailNewData({userId: this.$route.query.userId}).then(res => {
-          this.newData = res.data;
-        })
-      },
-      getLiveHotRoomDetailTotalCount() {
-        LiveApi.getLiveHotRoomDetailTotalCount({liveId: this.$route.query.userId}).then(res => {
+      getLiveProductDetailTopTotalCount() {
+        LiveApi.getLiveProductDetailTopTotalCount({goodId: this.$route.query.goodsId}).then(res => {
           const arrs = {
             data: [],
             data2: []
@@ -346,8 +329,8 @@
           font-size: 17px;
         }
 
-        .value-pink {
-          color: #db396c;
+        .value-orange {
+          color: orangered;
         }
       }
     }
@@ -362,5 +345,7 @@
     margin-left: 20px;
     margin-bottom: 15px;
     font-weight: bold;
+    font-family: "黑体";
+    font-size: 15px;
   }
 </style>
