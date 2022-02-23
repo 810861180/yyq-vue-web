@@ -94,7 +94,7 @@
         this.getLiveHotRoomHistory();
       },
       handleInfo(row) {
-
+        window.open(`${window.location.origin}#/productAttrList?goodsId=${row.goodsId}&orderCount=${row.totalProductOrderAccount}&conversionRate=${row.conversionRate}&promotionCount=${row.totalPromotionUserAccount}`);
       }
     },
   };
