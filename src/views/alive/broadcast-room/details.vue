@@ -151,7 +151,7 @@
     <div class="right">
       <el-card>
         <h3>流量趋势</h3>
-        <div id="flowChart" style="width: 100%; height: 500px"></div>
+        <div id="flowChart" style="width: 100%; height: 400px"></div>
       </el-card>
       <el-card style="margin-top: 20px">
         <h3>流量来源</h3>
@@ -366,9 +366,14 @@ export default {
         // 放大倍数
         dataZoom: [
           {
-            type: "inside",
-            throttle: 50,
-          },
+      type: 'inside',
+      start: 0,
+      end: 10
+    },
+    {
+      start: 0,
+      end: 10
+    }
         ],
         // 设置每条曲线的数据和样式
         series: [

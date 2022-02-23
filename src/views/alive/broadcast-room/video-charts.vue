@@ -34,7 +34,6 @@ export default {
         data.viewerFromOther.push(res.data[key].viewerFromOther * 100);
         data.viewerFromVideo.push(res.data[key].viewerFromVideo * 100);
       }
-      console.log(data);
       this.createChart(data);
     });
   },
@@ -54,7 +53,7 @@ export default {
         grid: {
           left: "3%",
           right: "4%",
-          bottom: "3%",
+          bottom: "12%",
           containLabel: true,
         },
         xAxis: {
@@ -65,6 +64,17 @@ export default {
         yAxis: {
           type: "value",
         },
+        dataZoom: [
+          {
+            type: 'inside',
+            start: 0,
+            end: 10
+          },
+          {
+            start: 0,
+            end: 10
+          }
+        ],
         series: [
           {
             name: "同城",
