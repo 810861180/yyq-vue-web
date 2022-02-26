@@ -15,18 +15,22 @@
         </div>
       </div>
       <el-card class="box-card">
-        <div class="left-data">
-          <div class="item">
+        <div class="left-data left-data2">
+          <div class="item2">
+            <div style="width: 100px;">价格</div>
             <div class="value value-orange">￥{{ leftData.price | tablefilter('centToyuan')}} </div>
-            <div>价格</div>
+            
           </div>
-          <div class="item">
-            <div class="value value-orange">￥{{ leftData.cosFee | tablefilter('centToyuan') }} <span>[{{leftData.cosFeeScale}}]</span></div>
-            <div>预估佣金</div>
+          <div class="item2">
+            <div style="width: 100px;">预估佣金</div>
+            <div class="value value-orange">
+              <span>￥{{ leftData.cosFee | tablefilter('centToyuan') }} </span>
+              <span style="font-size: 12px; color: black">[{{leftData.cosFeeScale | tablefilter('percent')}}]</span>
+            </div>
           </div>
-          <div class="item">
-            <div class="value value-pink">{{ leftData.platformSales | tablefilter('_toWan') }}</div>
-            <div>全网销量</div>
+          <div class="item2">
+            <div style="width: 100px;">全网销量</div>
+            <div class="value value-pink" style="padding-left: 5px;">{{ leftData.platformSales | tablefilter('toWan') }}</div>
           </div>
         </div>
       </el-card>
@@ -39,7 +43,7 @@
           </div>
           <div class="item">
             <div>转化率</div>
-            <div class="value">￥{{ $route.query.conversionRate  }}</div>
+            <div class="value">{{ $route.query.conversionRate | filters1 }}</div>
           </div>
           <div class="item">
             <div>推广次数</div>
@@ -52,7 +56,7 @@
         <div class="left-data">
           <div class="item">
             <div>关联直播场次</div>
-            <div class="value">{{ leftData.userCount | tablefilter('yuanAndWan')  }}</div>
+            <div class="value">{{ leftData.liveCount | toWan  }}</div>
           </div>
           <div class="item">
             <div>关联达人</div>
@@ -60,21 +64,32 @@
           </div>
           <div class="item">
             <div>关联视频</div>
-            <div class="value">￥{{ leftData.userCount }}</div>
+            <div class="value">{{ leftData.videoCount }}</div>
           </div>
         </div>
       </el-card>
       <div class="box-card">
         <h3>店铺信息</h3>
         <div style="display: flex;">
-          <img :src="leftData.storeGoodsData.shop_logo " class="header-img50" style="margin-right: 12px;">
+          <img :src="leftData.storeGoodsData.shop_logo" class="header-img" style="margin-right: 12px;">
           <div>
             <div style="margin-top: 10px;">
               <span style="font-weight: bold;">{{ leftData.storeGoodsData.shop_name }}</span>
             </div>
-            <div style="margin-top: 10px;">用户口碑：{{ leftData.storeGoodsData.dsr_info_logistics | toWan }}</div>
-            <div style="margin-top: 10px;">发货速度：{{ leftData.storeGoodsData.dsr_info_logistics | toWan }}</div>
-            <div style="margin-top: 10px;">服务态度：{{ leftData.storeGoodsData.dsr_info_logistics | toWan }}</div>
+            <div style="display: flex; margin-top: 8px;">
+              <div style="margin-right: 10px;">
+                <div style="text-align: center;color: red;font-weight: bold;">{{ leftData.storeGoodsData.dsr_info_public_praise }}</div>
+                <div>用户口碑</div>
+              </div>
+              <div style="margin-right: 10px;">
+                <div style="text-align: center;color: red;font-weight: bold;">{{ leftData.storeGoodsData.dsr_info_logistics }}</div>
+                <div>发货速度</div>
+              </div>
+              <div>
+                <div style="text-align: center; color: red;font-weight: bold;">{{ leftData.storeGoodsData.dsr_info_service }}</div>
+                <div>服务态度</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -96,8 +111,14 @@
   export default {
     data() {
       return {
-        leftData: {},
+        leftData: {storeGoodsData: {}},
         flowChartData: {data: [], data2: []},
+      }
+    },
+    filters: {
+      filters1(val) {
+        if(!val) return ''
+        return `${(Number(val) * 100).toFixed(1)}%`;
       }
     },
     mounted() {
@@ -322,6 +343,11 @@
           width: 33%;
           margin-bottom: 20px;
         }
+        .item2 {
+          display: flex;
+          align-items: center;
+          margin-top: 8px;
+        }
 
         .value {
           margin-top: 8px;
@@ -331,6 +357,14 @@
 
         .value-orange {
           color: orangered;
+          
+        }
+      }
+      .left-data2{
+        display: block;
+        font-weight: bold;
+        .value{
+          margin-top: 0;
         }
       }
     }
@@ -347,5 +381,10 @@
     font-weight: bold;
     font-family: "黑体";
     font-size: 15px;
+  }
+  .header-img{
+    height: 64px;
+    width: 64px;
+    
   }
 </style>
