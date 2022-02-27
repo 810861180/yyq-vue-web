@@ -79,6 +79,12 @@ export default class LiveApi {
     // 获取品牌详情统计图表
     static getLiveBrandDetailTotalCount = (params) => request({url: '/live/list/LiveBrandDetailTotalCount', method:'get', params});
 
+    // 获取热门商品统计图表上
+    static getLiveProductDetailTopTotalCount = (params) => request({url: '/live/list/LiveProductDetailTopTotalCount', method:'get', params});
+
+    // 获取热门商品统计图表下
+    static getLiveProductDetailDownTotalCount = (params) => request({url: '/live/list/LiveProductDetailDownTotalCount', method:'get', params});
+
 
 
     // 获取爆款直播间统计图表

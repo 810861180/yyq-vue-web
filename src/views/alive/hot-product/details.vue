@@ -96,8 +96,49 @@
     </div>
     <div class="right">
       <el-card>
-        <h3>流量趋势</h3>
-        <div id="flowChart" style="width: 100%; height: 500px;"></div>
+        <h3>新增数据</h3>
+        <div style="display: flex;justify-content: space-between; padding: 0 10%; font-size: 16px;line-height: 28px;text-align: center;">
+          <div>
+            <div>全网销量增量</div>
+            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+          </div>
+          <div>
+            <div>浏览量</div>
+            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+          </div>
+          <div>
+            <div>关联达人</div>
+            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+          </div>
+          <div>
+            <div>关联直播场次</div>
+            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+          </div>
+          <div>
+            <div>关联视频</div>
+            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+          </div>
+        </div>
+      </el-card>
+      <el-card>
+        <div class="charts">
+          <div class="item">
+            <h3>平台数据</h3>
+            <div class="item-chart" id="productOrderAccount"></div>
+          </div>
+          <div class="item">
+            <h3>推广次数趋势图</h3>
+            <div class="item-chart" id="promotionUserAccount"></div>
+          </div>
+          <div class="item">
+            <h3>全网销量数据</h3>
+            <div class="item-chart" id="sales"></div>
+          </div>
+          <div class="item">
+            <h3>每日关联视频/直播数</h3>
+            <div class="item-chart" id="videoCount"></div>
+          </div>
+        </div>
       </el-card>
     </div>
   </div>
@@ -112,7 +153,16 @@
     data() {
       return {
         leftData: {storeGoodsData: {}},
-        flowChartData: {data: [], data2: []},
+        charts: {
+          productOrderAccount: [],
+          promotionUserAccount: [],
+          pv: []
+        },
+        countData: {
+          liveCount: [],
+          sales: [],
+          videoCount: []
+        }
       }
     },
     filters: {
@@ -123,8 +173,8 @@
     },
     mounted() {
       this.getLiveProductDetailLeftInfo();
-      // this.getLiveProductDetailTopTotalCount();
-      // this.flowChart();
+      this.getLiveProductDetailTopTotalCount();
+      this.getLiveProductDetailDownTotalCount();
     },
     methods: {
       getLiveProductDetailLeftInfo() {
@@ -132,36 +182,39 @@
           this.leftData = res.data;
         })
       },
+
       getLiveProductDetailTopTotalCount() {
         LiveApi.getLiveProductDetailTopTotalCount({goodId: this.$route.query.goodsId}).then(res => {
-          const arrs = {
-            data: [],
-            data2: []
-          }
-          console.log(res.data)
           for (const key in res.data) {
-            arrs.data.push([toDate(key), Number(res.data[key].enterCount)]);
-            arrs.data2.push([toDate(key), Number(res.data[key].currentUserCount)]);
+            for (let item in this.charts) {
+              this.charts[item].push([ toDate(key, true), Number(res.data[key][item]) ]);
+            }
           }
-          this.flowChartData = arrs;
-          this.flowChart();
+          this.allChart('productOrderAccount', this.charts.productOrderAccount, this.charts.pv);
+          this.promotionChart()
         })
       },
-      flowChart() {
-        var chartDom = document.getElementById('flowChart');
-        var myChart = echarts.init(chartDom);
-        var option;
+      getLiveProductDetailDownTotalCount() {
+        LiveApi.getLiveProductDetailDownTotalCount({goodId: this.$route.query.goodsId}).then(res => {
+          for (const key in res.data) {
+            for (let item in this.countData) {
+              this.countData[item].push([ toDate(key, true), Number(res.data[key][item]) ]);
+            }
+          }
+          this.salesChart();
+          this.videoCountChart()
+        })
+      },
+      
 
-        let data = this.flowChartData.data;
-        let data2 = this.flowChartData.data2;
+      allChart(id, data, data2) {
+        let chartDom = document.getElementById(id);
+        let myChart = echarts.init(chartDom);
+        let option;
+
         option = {
-          // title: {
-          //     left: 'center',
-          //     text: 'Tootip and dataZoom on Mobile Device'
-          // },
           legend: {
-            left: 'right',
-            data: ['进场人数', '在线人数']
+            data: ['平台订单量', '浏览量']
           },
           tooltip: {
             triggerOn: 'none',
@@ -169,21 +222,13 @@
               return [pt[0], 130];
             }
           },
-          // toolbox: {
-          //     left: 'center',
-          //     itemSize: 25,
-          //     top: 55,
-          //     feature: {
-          //     dataZoom: {
-          //         yAxisIndex: 'none'
-          //     },
-          //     restore: {}
-          //     }
-          // },
           xAxis: {
-            type: 'time',
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true,
+              length: 10
+            },
             axisPointer: {
-              value: '2016-10-7',
               snap: true,
               lineStyle: {
                 color: '#7581BD',
@@ -192,7 +237,7 @@
               label: {
                 show: true,
                 formatter: function (params) {
-                  return echarts.format.formatTime('yyyy-MM-dd hh:mm', params.value);
+                  return params.value
                 },
                 backgroundColor: '#7581BD'
               },
@@ -201,29 +246,52 @@
                 color: '#7581BD'
               }
             },
+            data: data.map(item => item[0]),
             splitLine: {
               show: false
             }
           },
-          yAxis: {
-            type: 'value',
-            axisTick: {
-              inside: true
+          yAxis: [
+            {
+              type: 'value',
+              name: '平台订单量',
+              axisTick: {
+                length: 6,
+                lineStyle: {
+                  type: 'dashed'
+                }
+              },
+              splitLine: {
+                show: false
+              },
+              axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+              }
             },
-            splitLine: {
-              show: false
-            },
-            axisLabel: {
-              inside: true,
-              formatter: '{value}\n'
-            },
-            z: 10
-          },
+            {
+              type: 'value',
+              name: '浏览量',
+              axisTick: {
+                length: 6,
+                lineStyle: {
+                  type: 'dashed'
+                }
+              },
+              splitLine: {
+                show: false
+              },
+              axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+              }
+            }
+          ],
           grid: {
-            top: 110,
-            left: 15,
-            right: 15,
-            height: 160
+            top: 100,
+            left: 35,
+            right: 25,
+            height: 200
           },
           dataZoom: [
             {
@@ -233,38 +301,32 @@
           ],
           series: [
             {
-              name: '进场人数',
+              name: '平台订单量',
               type: 'line',
+              yAxisIndex: 0,
               smooth: true,
-              symbol: 'circle',
-              symbolSize: 5,
-              sampling: 'average',
               itemStyle: {
                 color: '#0770FF'
               },
-              stack: 'a',
               areaStyle: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 0,
-                    color: 'rgba(58,77,233,0.8)'
+                    color: 'rgba(58,77,233,0.3)'
                   },
                   {
                     offset: 1,
-                    color: 'rgba(58,77,233,0.3)'
+                    color: 'rgba(58,77,233,0.1)'
                   }
                 ])
               },
-              data: data
+              data: data.map(item => item[1])
             },
             {
-              name: '在线人数',
+              name: '浏览量',
               type: 'line',
+              yAxisIndex: 1,
               smooth: true,
-              stack: 'a',
-              symbol: 'circle',
-              symbolSize: 5,
-              sampling: 'average',
               itemStyle: {
                 color: '#F2597F'
               },
@@ -272,22 +334,211 @@
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 0,
-                    color: 'rgba(213,72,120,0.8)'
+                    color: 'rgba(213,72,120,0.3)'
                   },
                   {
                     offset: 1,
-                    color: 'rgba(213,72,120,0.3)'
+                    color: 'rgba(213,72,120,0.1)'
                   }
                 ])
               },
-              data: data2
+              data: data2.map(item => item[1])
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+
+      },
+
+      promotionChart() {
+        let chartDom = document.getElementById('promotionUserAccount');
+        let myChart = echarts.init(chartDom);
+        let option;
+
+        option = {
+          xAxis: {
+            type: 'category',
+            data: this.charts.promotionUserAccount.map(item => item[0]),
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: this.charts.promotionUserAccount.map(item => item[1]),
+              type: 'line',
+              smooth: true,
+              areaStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: 'rgba(213,72,120,0.3)'
+                  },
+                  {
+                    offset: 1,
+                    color: 'rgba(213,72,120,0.1)'
+                  }
+                ])
+              },
             }
           ]
         };
 
         option && myChart.setOption(option);
+      },
 
-      }
+      salesChart() {
+        let chartDom = document.getElementById('sales');
+        let myChart = echarts.init(chartDom);
+        let option;
+
+        option = {
+          legend: {
+            data: ['销售量']
+          },
+          xAxis: {
+            type: 'category',
+            data: this.countData.sales.map(item => item[0]),
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              data: this.countData.sales.map(item => item[1]),
+              type: 'line',
+              smooth: true
+            }
+          ]
+        };
+
+        option && myChart.setOption(option);
+      },
+
+      videoCountChart() {
+        let chartDom = document.getElementById('videoCount');
+        let myChart = echarts.init(chartDom);
+        let option;
+
+        option = {
+          legend: {
+            data: ['视频数', '直播数']
+          },
+          tooltip: {
+            triggerOn: 'none',
+            position: function (pt) {
+              return [pt[0], 130];
+            }
+          },
+          xAxis: {
+            type: 'category',
+            axisTick: {
+              alignWithLabel: true,
+              length: 10
+            },
+            axisPointer: {
+              snap: true,
+              lineStyle: {
+                color: '#7581BD',
+                width: 2
+              },
+              label: {
+                show: true,
+                formatter: function (params) {
+                  return params.value
+                },
+                backgroundColor: '#7581BD'
+              },
+              handle: {
+                show: true,
+                color: '#7581BD'
+              }
+            },
+            data: this.countData.videoCount.map(item => item[0]),
+            splitLine: {
+              show: false
+            }
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: '视频数',
+              axisTick: {
+                length: 6,
+                lineStyle: {
+                  type: 'dashed'
+                }
+              },
+              splitLine: {
+                show: false
+              },
+              axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+              }
+            },
+            {
+              type: 'value',
+              name: '直播数',
+              axisTick: {
+                length: 6,
+                lineStyle: {
+                  type: 'dashed'
+                }
+              },
+              splitLine: {
+                show: false
+              },
+              axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+              }
+            }
+          ],
+          grid: {
+            top: 100,
+            left: 35,
+            right: 25,
+            height: 200
+          },
+          dataZoom: [
+            {
+              type: 'inside',
+              throttle: 50
+            }
+          ],
+          series: [
+            {
+              name: '视频数',
+              type: 'bar',
+              yAxisIndex: 0,
+              smooth: true,
+              itemStyle: {
+                color: '#0770FF'
+              },
+              data: this.countData.videoCount.map(item => item[1])
+            },
+            {
+              name: '直播数',
+              type: 'bar',
+              yAxisIndex: 1,
+              smooth: true,
+              itemStyle: {
+                color: '#F2597F'
+              },
+              data: this.countData.liveCount.map(item => item[1])
+            }
+          ]
+        };
+        option && myChart.setOption(option);
+
+      },
     }
   }
 </script>
@@ -372,6 +623,21 @@
     .right {
       flex: 1;
       margin-left: 20px;
+      overflow: auto;
+      .charts{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        .item{
+          width: 48%;
+          height: 440px;
+          margin-bottom: 20px;
+          .item-chart{
+            width: 100%;
+            height: 380px;
+          }
+        }
+      }
     }
   }
 
