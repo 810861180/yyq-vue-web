@@ -67,6 +67,20 @@ export default class LiveApi {
     // 获取热门商品统计
     static getLiveProductDetailTopTotalCount = (params) => request({url: '/live/list/LiveProductDetailTopTotalCount', method:'get', params});
 
+    // 获取品牌详情带货信息
+    static getLiveBrandDetailLeftSaleInfo = (params) => request({url: '/live/list/LiveBrandDetailLeftSaleInfo', method:'get', params});
+
+    // 获取品牌详情新增信息
+    static getLiveBrandDetailNewData = (params) => request({url: '/live/list/LiveBrandDetailNewData', method:'get', params});
+
+    // 获取品牌详情商品占比
+    static getLiveBrandDetailProductPercent = (params) => request({url: '/live/list/LiveBrandDetailProductPercent', method:'get', params});
+
+    // 获取品牌详情统计图表
+    static getLiveBrandDetailTotalCount = (params) => request({url: '/live/list/LiveBrandDetailTotalCount', method:'get', params});
+
+
+
     // 获取爆款直播间统计图表
     // static getLiveHotRoomDetailTotalCount = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCount', method:'get', params});
 }
