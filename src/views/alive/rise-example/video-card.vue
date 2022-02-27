@@ -2,7 +2,7 @@
     <div>
         <div class="card">
             <!-- <div class="main" :style="{background: `url(${item.originCover}) 0% 0% / 100% 100%`}"> -->
-            <div class="main" :style="{background: `url(http://www.567zx.cn:81/static/images/IMG1645542129508.jpg) 0% 0% / 100% 100%`}">
+            <div class="main" @click="handleLink" :style="{background: `url(http://www.567zx.cn:81/static/images/IMG1645542129508.jpg) 0% 0% / 100% 100%`}">
                 <div class="header">
                     <span class="index">{{ index }}</span>
                     <span class="index"><i class="el-icon-timer"></i>{{ item.duration | getTime }}</span>
@@ -15,7 +15,7 @@
                     <svg-icon iconClass="fenxiang" className="icon"></svg-icon>
                     <div>{{ item.shareCount | toWan }}</div>
                 </div>
-            </div> 
+            </div>
             <div class="footer">
                 <img class="header-img50" :src="item.avatarLarger">
                 <div class="info">
@@ -28,7 +28,7 @@
                         </span>
                     </div>
                 </div>
-                <span @click="handleLink">
+                <span @click="getDetail(item)">
                     <svg-icon iconClass="shangshen" className="icon"></svg-icon>
                 </span>
             </div>
@@ -57,6 +57,9 @@ export default {
     methods: {
         handleLink() {
             window.open(this.item.shareUrl);
+        },
+        getDetail(row) {
+          window.open(`${window.location.origin}#/addProductAttr?videoId=${row.videoId}`);
         }
     }
 }
@@ -102,7 +105,7 @@ export default {
                 }
                 .icon{
                     font-size: 22px;
-                    
+
                 }
             }
         }

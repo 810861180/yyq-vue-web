@@ -41,25 +41,60 @@
             登录
           </el-button>
           <el-button style="width: 45%" type="primary" @click.native.prevent="handleTry">
-            获取体验账号
+            注册
           </el-button>
         </el-form-item>
       </el-form>
     </el-card>
     <img :src="login_center_bg" class="login-center-layout">
     <el-dialog
-      title="公众号二维码"
+      title="注册"
       :visible.sync="dialogVisible"
       :show-close="false"
       :center="true"
       width="30%">
       <div style="text-align: center">
-        <span class="font-title-large"><span class="color-main font-extra-large">关注公众号</span>回复<span class="color-main font-extra-large">体验</span>获取体验账号</span>
-        <br>
-        <img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/banner/qrcode_for_macrozheng_258.jpg" width="160" height="160" style="margin-top: 10px">
+        <el-form autoComplete="on"
+                 :model="registerForm"
+                 :rules="loginRules"
+                 ref="registerForm"
+                 label-position="left">
+          <div style="text-align: center">
+            <span class="font-title-large">请输入您的<span class="color-main font-extra-large">用户名</span>和<span class="color-main font-extra-large">密码</span>来注册账号</span>
+          </div>
+          <h2 class="login-title color-main"></h2>
+          <el-form-item prop="username">
+            <el-input name="username"
+                      type="text"
+                      v-model="registerForm.rUsername"
+                      autoComplete="on"
+                      placeholder="请输入用户名">
+              <span slot="prefix">
+                <svg-icon icon-class="user" class="color-main"></svg-icon>
+              </span>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input name="password"
+                      :type="pwdType"
+                      @keyup.enter.native="handleRegister"
+                      v-model="registerForm.rPassword"
+                      autoComplete="on"
+                      placeholder="请输入密码">
+              <span slot="prefix">
+                <svg-icon icon-class="password" class="color-main"></svg-icon>
+              </span>
+                <span slot="suffix" @click="showPwd">
+                <svg-icon icon-class="eye" class="color-main"></svg-icon>
+              </span>
+            </el-input>
+          </el-form-item>
+        </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogConfirm">确定</el-button>
+        <el-button style="width: 45%" type="primary" @click.native.prevent="handleRegister">
+          注册
+        </el-button>
       </span>
     </el-dialog>
   </div>
@@ -67,7 +102,7 @@
 
 <script>
   import {isvalidUsername} from '@/utils/validate';
-  import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
+  import {setSupport, getSupport, setCookie, getCookie} from '@/utils/support';
   import login_center_bg from '@/assets/images/login_center_bg.png'
 
   export default {
@@ -92,6 +127,10 @@
           username: '',
           password: '',
         },
+        registerForm: {
+          rUsername: '',
+          rPassword: '',
+        },
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateUsername}],
           password: [{required: true, trigger: 'blur', validator: validatePass}]
@@ -99,17 +138,17 @@
         loading: false,
         pwdType: 'password',
         login_center_bg,
-        dialogVisible:false,
-        supportDialogVisible:false
+        dialogVisible: false,
+        supportDialogVisible: false
       }
     },
     created() {
       this.loginForm.username = getCookie("username");
       this.loginForm.password = getCookie("password");
-      if(this.loginForm.username === undefined||this.loginForm.username==null||this.loginForm.username===''){
+      if (this.loginForm.username === undefined || this.loginForm.username == null || this.loginForm.username === '') {
         this.loginForm.username = 'admin';
       }
-      if(this.loginForm.password === undefined||this.loginForm.password==null){
+      if (this.loginForm.password === undefined || this.loginForm.password == null) {
         this.loginForm.password = '';
       }
     },
@@ -132,8 +171,8 @@
             this.loading = true;
             this.$store.dispatch('Login', this.loginForm).then(() => {
               this.loading = false;
-              setCookie("username",this.loginForm.username,15);
-              setCookie("password",this.loginForm.password,15);
+              setCookie("username", this.loginForm.username, 15);
+              setCookie("password", this.loginForm.password, 15);
               this.$router.push({path: '/'})
             }).catch(() => {
               this.loading = false
@@ -144,14 +183,37 @@
           }
         })
       },
-      handleTry(){
-        this.dialogVisible =true
+      handleRegister() {
+        this.$refs.loginForm.validate(valid => {
+          if (valid) {
+            // let isSupport = getSupport();
+            // if(isSupport===undefined||isSupport==null){
+            //   this.dialogVisible =true;
+            //   return;
+            // }
+            this.loading = true;
+            this.$store.dispatch('Login', this.loginForm).then(() => {
+              this.loading = false;
+              setCookie("username", this.loginForm.username, 15);
+              setCookie("password", this.loginForm.password, 15);
+              this.$router.push({path: '/'})
+            }).catch(() => {
+              this.loading = false
+            })
+          } else {
+            console.log('参数验证不合法！');
+            return false
+          }
+        })
       },
-      dialogConfirm(){
-        this.dialogVisible =false;
+      handleTry() {
+        this.dialogVisible = true
+      },
+      dialogConfirm() {
+        this.dialogVisible = false;
         setSupport(true);
       },
-      dialogCancel(){
+      dialogCancel() {
         this.dialogVisible = false;
         setSupport(false);
       }

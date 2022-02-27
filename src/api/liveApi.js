@@ -87,6 +87,7 @@ export default class LiveApi {
 
 
 
-    // 获取爆款直播间统计图表
-    // static getLiveHotRoomDetailTotalCount = (params) => request({url: '/live/list/LiveHotRoomDetailTotalCount', method:'get', params});
+    // 获取飙升视频详细信息
+    static getLiveVideoDetailLeftInfo = (params) => request({url: '/live/list/LiveVideoDetailLeftInfo', method:'get', params});
+
 }

@@ -68,6 +68,13 @@ export const asyncRouterMap = [
     hidden: true
   },
   {
+    path: '/addProductAttr',
+    name: 'addProductAttr',
+    component: () => import('@/views/alive/rise-example/details'),
+    meta: {title: '添加商品属性'},
+    hidden: true
+  },
+  {
     path: '/pms',
     component: Layout,
     redirect: '/pms/product',
@@ -105,13 +112,6 @@ export const asyncRouterMap = [
         name: 'brand-live',
         component: () => import('@/views/alive/live-brand/index'),
         meta: {title: '品牌自播榜', icon: 'product-attr'}
-      },
-      {
-        path: 'addProductAttr',
-        name: 'addProductAttr',
-        component: () => import('@/views/pms/productAttr/addProductAttr'),
-        meta: {title: '添加商品属性'},
-        hidden: true
       },
       {
         path: 'updateProductAttr',
