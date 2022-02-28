@@ -33,8 +33,27 @@
     </div>
     <div class="right">
       <el-card>
-        <h3>流量趋势</h3>
-        <div id="flowChart" style="width: 100%; height: 500px;"></div>
+        <div class="charts">
+          <div class="item">
+            <h2>点赞数趋势</h2>
+            <div class="item-chart" id="goodValue"></div>
+          </div>
+          <div class="item">
+            <h2>评论数趋势</h2>
+            <div class="item-chart" id="commentValue"></div>
+          </div>
+          <div class="item" style="width: 100%;">
+            <h2>分享数趋势</h2>
+            <div class="item-chart" id="shareValue"></div>
+          </div>
+        </div>
+      </el-card>
+      <el-card style="margin-top: 20px;">
+        <h2>数据详情</h2>
+        <yyq-table 
+          :tableColumn="rankColumn" 
+          :tableData="screenTableData">
+        </yyq-table>
       </el-card>
     </div>
   </div>
@@ -43,12 +62,25 @@
 <script>
   import LiveApi from "@/api/liveApi";
   import * as echarts from 'echarts';
-
+  import { toDate, rankColumn } from './config';
+  import yyqTable from "../modules/yyq-table.vue";
   export default {
+    components: {
+      yyqTable
+    },
     data() {
       return {
         leftData: {storeGoodsData: {}},
-        flowChartData: {data: [], data2: []},
+        flowChartData: {
+          commentValue: [],
+          increase_commentValue: [], 
+          goodValue: [], 
+          increase_goodValue: [], 
+          shareValue: [], 
+          increase_shareValue: []
+        },
+        rankColumn: rankColumn,
+        screenTableData: []
       }
     },
     filters: {
@@ -59,45 +91,80 @@
     },
     mounted() {
       this.getLiveVideoDetailLeftInfo();
-      // this.getLiveProductDetailTopTotalCount();
-      // this.flowChart();
+      this.getLiveSalesDetailTotalCount();
     },
     methods: {
+      // 分页
+      handleCurrentChange(val) {
+          this.getLiveRealBigScreen(val);
+      },
       getLiveVideoDetailLeftInfo() {
         LiveApi.getLiveVideoDetailLeftInfo({videoId: this.$route.query.videoId}).then(res => {
           this.leftData = res.data;
         })
       },
-      getLiveProductDetailTopTotalCount() {
-        LiveApi.getLiveProductDetailTopTotalCount({goodId: this.$route.query.goodsId}).then(res => {
-          const arrs = {
-            data: [],
-            data2: []
-          }
-          console.log(res.data)
-          for (const key in res.data) {
-            arrs.data.push([toDate(key), Number(res.data[key].enterCount)]);
-            arrs.data2.push([toDate(key), Number(res.data[key].currentUserCount)]);
-          }
-          this.flowChartData = arrs;
-          this.flowChart();
+      // 增量计算
+      increaseNum(arr) {
+        return arr.map((item, index) => {
+          if(index === 0) return [item[0], 0];
+          const yesterday = arr[index - 1]; // 昨日数据
+          return [item[0], item[1] - yesterday[1]];
         })
       },
-      flowChart() {
-        var chartDom = document.getElementById('flowChart');
+      // 计算数据最大值和最小值
+      getMaxAndMin(arr) {
+        const value = arr.map(item => item[1]);
+        Array.prototype.max = function() {
+          return Math.max.apply({}, this)
+        }
+        Array.prototype.min = function() {
+          return Math.min.apply({}, this)
+        }
+        return {
+          max: value.max(),
+          min: value.min()
+        }
+      },
+      getLiveSalesDetailTotalCount() {
+        LiveApi.getLiveVideoDetailTotalCount({videoId: this.$route.query.videoId}).then(res => {
+          // 四个小图表的key
+          const keys = ['commentValue', 'goodValue', 'shareValue']
+          for (const key in res.data) {
+            keys.forEach(item => {
+              this.flowChartData[item].push([ toDate(key), Number(res.data[key][item]) ]);
+            })
+          }
+          keys.forEach(item => {
+            this.flowChartData[`increase_${item}`] = this.increaseNum(this.flowChartData[item]);
+          })
+          // 小图表
+          keys.forEach(item => {
+            this.allChart(item, this.flowChartData[item], this.flowChartData[`increase_${item}`])
+          })
+
+          for (const key in res.data) {
+            this.screenTableData.push({
+              time: toDate(res.data[key].createTime),
+              commentValue: this.flowChartData.commentValue.find(item => item[0] === toDate(res.data[key].createTime))[1],
+              increase_commentValue: this.flowChartData.increase_commentValue.find(item => item[0] === toDate(res.data[key].createTime))[1], 
+              goodValue: this.flowChartData.goodValue.find(item => item[0] === toDate(res.data[key].createTime))[1], 
+              increase_goodValue:this.flowChartData.increase_goodValue.find(item => item[0] === toDate(res.data[key].createTime))[1], 
+              shareValue: this.flowChartData.shareValue.find(item => item[0] === toDate(res.data[key].createTime))[1], 
+              increase_shareValue: this.flowChartData.increase_shareValue.find(item => item[0] === toDate(res.data[key].createTime))[1]
+            })
+          }
+        })
+      },
+
+      // 批量处理
+      allChart(id, data, data2) {
+        var chartDom = document.getElementById(id);
         var myChart = echarts.init(chartDom);
         var option;
 
-        let data = this.flowChartData.data;
-        let data2 = this.flowChartData.data2;
         option = {
-          // title: {
-          //     left: 'center',
-          //     text: 'Tootip and dataZoom on Mobile Device'
-          // },
           legend: {
-            left: 'right',
-            data: ['进场人数', '在线人数']
+            data: ['增量', '总量']
           },
           tooltip: {
             triggerOn: 'none',
@@ -105,19 +172,11 @@
               return [pt[0], 130];
             }
           },
-          // toolbox: {
-          //     left: 'center',
-          //     itemSize: 25,
-          //     top: 55,
-          //     feature: {
-          //     dataZoom: {
-          //         yAxisIndex: 'none'
-          //     },
-          //     restore: {}
-          //     }
-          // },
           xAxis: {
             type: 'time',
+            axisTick: {
+              length: 10
+            },
             axisPointer: {
               value: '2016-10-7',
               snap: true,
@@ -128,6 +187,7 @@
               label: {
                 show: true,
                 formatter: function (params) {
+                  console.log(params)
                   return echarts.format.formatTime('yyyy-MM-dd hh:mm', params.value);
                 },
                 backgroundColor: '#7581BD'
@@ -141,25 +201,52 @@
               show: false
             }
           },
-          yAxis: {
-            type: 'value',
-            axisTick: {
-              inside: true
+          yAxis: [
+            {
+              type: 'value',
+              name: '增量',
+              min: this.getMaxAndMin(data2).min,
+              max: this.getMaxAndMin(data2).max,
+              axisTick: {
+                length: 6,
+                lineStyle: {
+                  type: 'dashed'
+                }
+              },
+              splitLine: {
+                show: false
+              },
+              axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+              }
             },
-            splitLine: {
-              show: false
-            },
-            axisLabel: {
-              inside: true,
-              formatter: '{value}\n'
-            },
-            z: 10
-          },
+            {
+              type: 'value',
+              name: '总量',
+              min: this.getMaxAndMin(data).min,
+              max: this.getMaxAndMin(data).max,
+              axisTick: {
+                length: 6,
+                lineStyle: {
+                  type: 'dashed'
+                }
+              },
+              splitLine: {
+                show: false
+              },
+              axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+              }
+            }
+            
+          ],
           grid: {
-            top: 110,
-            left: 15,
-            right: 15,
-            height: 160
+            top: 100,
+            left: 25,
+            right: 25,
+            height: 200
           },
           dataZoom: [
             {
@@ -169,38 +256,32 @@
           ],
           series: [
             {
-              name: '进场人数',
+              name: '总量',
               type: 'line',
+              yAxisIndex: 1,
               smooth: true,
-              symbol: 'circle',
-              symbolSize: 5,
-              sampling: 'average',
               itemStyle: {
                 color: '#0770FF'
               },
-              stack: 'a',
               areaStyle: {
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 0,
-                    color: 'rgba(58,77,233,0.8)'
+                    color: 'rgba(58,77,233,0.3)'
                   },
                   {
                     offset: 1,
-                    color: 'rgba(58,77,233,0.3)'
+                    color: 'rgba(58,77,233,0.1)'
                   }
                 ])
               },
               data: data
             },
             {
-              name: '在线人数',
+              name: '增量',
               type: 'line',
+              yAxisIndex: 0,
               smooth: true,
-              stack: 'a',
-              symbol: 'circle',
-              symbolSize: 5,
-              sampling: 'average',
               itemStyle: {
                 color: '#F2597F'
               },
@@ -208,11 +289,11 @@
                 color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   {
                     offset: 0,
-                    color: 'rgba(213,72,120,0.8)'
+                    color: 'rgba(213,72,120,0.3)'
                   },
                   {
                     offset: 1,
-                    color: 'rgba(213,72,120,0.3)'
+                    color: 'rgba(213,72,120,0.1)'
                   }
                 ])
               },
@@ -220,10 +301,9 @@
             }
           ]
         };
-
         option && myChart.setOption(option);
 
-      }
+      },
     }
   }
 </script>
@@ -308,6 +388,21 @@
     .right {
       flex: 1;
       margin-left: 20px;
+      overflow: auto;
+      .charts{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        .item{
+          width: 48%;
+          height: 440px;
+          margin-bottom: 20px;
+          .item-chart{
+            width: 100%;
+            height: 380px;
+          }
+        }
+      }
     }
   }
 

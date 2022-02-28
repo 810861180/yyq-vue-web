@@ -85,9 +85,9 @@ export default class LiveApi {
     // 获取热门商品统计图表下
     static getLiveProductDetailDownTotalCount = (params) => request({url: '/live/list/LiveProductDetailDownTotalCount', method:'get', params});
 
-
-
     // 获取飙升视频详细信息
     static getLiveVideoDetailLeftInfo = (params) => request({url: '/live/list/LiveVideoDetailLeftInfo', method:'get', params});
 
+    // 获取飙升视频统计图表
+    static getLiveVideoDetailTotalCount = (params) => request({url: '/live/list/LiveVideoDetailTotalCount', method:'get', params});
 }

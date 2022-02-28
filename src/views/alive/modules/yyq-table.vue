@@ -16,7 +16,7 @@
             </div>
             <div v-if="item.NumConfig" style="font-weight: bold;" :style="item.NumConfig.style">
               <span v-if="item.NumConfig.unit">{{ item.NumConfig.unit }}</span>
-              <span v-if="item.NumConfig.filterName">{{ row[item.prop] | tablefilter(item.NumConfig.filterName, item.NumConfig.replace) }}</span>
+              <span v-if="item.NumConfig.filterName && row[item.prop]">{{ row[item.prop] | tablefilter(item.NumConfig.filterName, item.NumConfig.replace) }}</span>
               <span v-else>{{ row[item.prop] }}</span>
             </div>
           </template>
@@ -24,6 +24,7 @@
       </el-table>
       <div style="padding: 20px 20px 0 0; text-align: right;">
         <el-pagination
+          v-if="paginationConfig"
           background
           @current-change="handleCurrentChange"
           :page-size="paginationConfig.pageSize"
