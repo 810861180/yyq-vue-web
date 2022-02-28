@@ -90,4 +90,7 @@ export default class LiveApi {
 
     // 获取飙升视频统计图表
     static getLiveVideoDetailTotalCount = (params) => request({url: '/live/list/LiveVideoDetailTotalCount', method:'get', params});
+    // 获取热门商品新增信息
+    static getLiveProductDetailNewData = (params) => request({url: '/live/list/LiveProductDetailNewData', method:'get', params});
+
 }
