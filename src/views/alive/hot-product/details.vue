@@ -19,7 +19,7 @@
           <div class="item2">
             <div style="width: 100px;">价格</div>
             <div class="value value-orange">￥{{ leftData.price | tablefilter('centToyuan')}} </div>
-            
+
           </div>
           <div class="item2">
             <div style="width: 100px;">预估佣金</div>
@@ -100,23 +100,23 @@
         <div style="display: flex;justify-content: space-between; padding: 0 10%; font-size: 16px;line-height: 28px;text-align: center;">
           <div>
             <div>全网销量增量</div>
-            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+            <div style="font-size: 24px;font-weight: bold;">{{newData.saleCount | toWan   }}</div>
           </div>
           <div>
             <div>浏览量</div>
-            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+            <div style="font-size: 24px;font-weight: bold;">{{ newData.viewCount | toWan  }}</div>
           </div>
           <div>
             <div>关联达人</div>
-            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+            <div style="font-size: 24px;font-weight: bold;">{{ newData.userCount }}</div>
           </div>
           <div>
             <div>关联直播场次</div>
-            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+            <div style="font-size: 24px;font-weight: bold;">{{ newData.liveCount }}</div>
           </div>
           <div>
             <div>关联视频</div>
-            <div style="font-size: 24px;font-weight: bold;">{{  }}</div>
+            <div style="font-size: 24px;font-weight: bold;">{{ newData.videoCount }}</div>
           </div>
         </div>
       </el-card>
@@ -153,6 +153,7 @@
     data() {
       return {
         leftData: {storeGoodsData: {}},
+        newData: {},
         charts: {
           productOrderAccount: [],
           promotionUserAccount: [],
@@ -175,6 +176,8 @@
       this.getLiveProductDetailLeftInfo();
       this.getLiveProductDetailTopTotalCount();
       this.getLiveProductDetailDownTotalCount();
+      this.getLiveProductDetailNewData();
+
     },
     methods: {
       getLiveProductDetailLeftInfo() {
@@ -182,7 +185,11 @@
           this.leftData = res.data;
         })
       },
-
+      getLiveProductDetailNewData() {
+        LiveApi.getLiveProductDetailNewData({goodId: this.$route.query.goodsId}).then(res => {
+          this.newData = res.data;
+        })
+      },
       getLiveProductDetailTopTotalCount() {
         LiveApi.getLiveProductDetailTopTotalCount({goodId: this.$route.query.goodsId}).then(res => {
           for (const key in res.data) {
@@ -205,7 +212,7 @@
           this.videoCountChart()
         })
       },
-      
+
 
       allChart(id, data, data2) {
         let chartDom = document.getElementById(id);
@@ -608,7 +615,7 @@
 
         .value-orange {
           color: orangered;
-          
+
         }
       }
       .left-data2{
@@ -651,6 +658,6 @@
   .header-img{
     height: 64px;
     width: 64px;
-    
+
   }
 </style>
