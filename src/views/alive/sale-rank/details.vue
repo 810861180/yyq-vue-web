@@ -508,15 +508,26 @@
 <style lang="scss" scoped>
   .rank-details{
     padding: 20px;
+    padding-right: 8px;
     display: flex;
     font-size: 12px;
+    max-height: 100vh;
     .left{
       width: 370px;
       border: 1px solid #DCDFE6;
       border-radius: 10px;
-      overflow: hidden;
       box-sizing: border-box;
       padding: 20px 0;
+      max-height: 100%;
+      overflow: auto;
+      &::-webkit-scrollbar {
+        width: 4px;    
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px white;
+        background: white;
+      }
       .time{
         background: #909399;
         text-align: center;
@@ -559,6 +570,15 @@
       flex: 1;
       margin-left: 20px;
       overflow: auto;
+      padding-right: 12px;
+      &::-webkit-scrollbar {
+        width: 4px;    
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.2);
+      }
       .charts{
         display: flex;
         flex-wrap: wrap;

@@ -594,11 +594,18 @@ export default {
     width: 370px;
     border: 1px solid #dcdfe6;
     border-radius: 10px;
-    overflow: hidden;
     box-sizing: border-box;
     padding: 20px 0;
-    height: 100%;
+    max-height: 100%;
     overflow: auto;
+    &::-webkit-scrollbar {
+        width: 4px;    
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px white;
+        background: white;
+      }
     .time {
       background: #909399;
       text-align: center;
