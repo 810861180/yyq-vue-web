@@ -589,7 +589,7 @@ export default {
   padding-right: 8px;
   display: flex;
   font-size: 12px;
-  max-height: calc(100vh - 40px);
+  max-height: 100vh;
   .left {
     width: 370px;
     border: 1px solid #dcdfe6;
