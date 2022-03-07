@@ -321,7 +321,7 @@
       overflow: hidden;
       box-sizing: border-box;
       padding: 20px 0;
-
+      max-height: calc(100vh - 40px);
       .time {
         background: #909399;
         text-align: center;

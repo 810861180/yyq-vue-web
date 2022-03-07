@@ -4,7 +4,7 @@
             <!-- <div class="main" :style="{background: `url(${item.originCover}) 0% 0% / 100% 100%`}"> -->
             <div class="main" @click="handleLink" :style="{background: `url(http://www.567zx.cn:81/static/images/IMG1645542129508.jpg) 0% 0% / 100% 100%`}">
                 <div class="header">
-                    <span class="index">{{ index }}</span>
+                    <span class="index">{{ index + 1 }}</span>
                     <span class="index"><i class="el-icon-timer"></i>{{ item.duration | getTime }}</span>
                 </div>
                 <div class="likes">
