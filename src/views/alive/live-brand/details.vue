@@ -481,9 +481,10 @@
 <style lang="scss" scoped>
   .rank-details {
     padding: 20px;
+    padding-right: 8px;
     display: flex;
     font-size: 12px;
-
+    max-height: calc(100vh - 40px);
     .left {
       width: 370px;
       border: 1px solid #DCDFE6;
@@ -491,7 +492,8 @@
       overflow: hidden;
       box-sizing: border-box;
       padding: 20px 0;
-      max-height: calc(100vh - 40px);
+      height: 100%;
+      overflow: auto;
       .time {
         background: #909399;
         text-align: center;
@@ -545,6 +547,21 @@
     .right {
       flex: 1;
       margin-left: 20px;
+      overflow: auto;
+      padding-right: 12px;
+      &::-webkit-scrollbar {
+        width: 4px;    
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.2);
+      }
+      &::-webkit-scrollbar-track {
+        // -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        border-radius: 0;
+        // background: rgba(0,0,0,0.1);
+      }
       .charts{
         display: flex;
         flex-wrap: wrap;
