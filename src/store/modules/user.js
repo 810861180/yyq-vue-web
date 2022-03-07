@@ -48,10 +48,15 @@ const user = {
       return new Promise((resolve, reject) => {
         createAdmin(username, userInfo.password).then(response => {
           const data = response.data
+          if(response.code === 200) {
+            resolve()
+          } else {
+            reject();
+          }
           // const tokenStr = data.tokenHead+data.token
           // setToken(tokenStr)
           // commit('SET_TOKEN', tokenStr)
-          resolve()
+          
         }).catch(error => {
           reject(error)
         })

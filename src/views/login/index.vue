@@ -191,14 +191,18 @@
               this.loading = false;
               setCookie("username", this.loginForm.username, 15);
               setCookie("password", this.loginForm.password, 15);
-              this.$router.push({path: '/'})
+              this.$message.success('注册成功！');
+              this.dialogVisible = false;
+              // this.$router.push({path: '/'})
             }).catch(() => {
+              this.$message.error('账号已被注册！');
               this.loading = false
             })
           } else {
             console.log('参数验证不合法！');
             return false
           }
+          
         })
       },
       handleTry() {

@@ -27,13 +27,17 @@ service.interceptors.response.use(
   /**
   * code为非200是抛错 可结合自己业务进行修改
   */
+ // mall-admin/admin/register
+    const whiteList = ['/admin/register'].map(item => `${response.config.baseURL}${item}`)
     const res = response.data
     if (res.code !== 200) {
-      Message({
-        message: res.message,
-        type: 'error',
-        duration: 3 * 1000
-      })
+      if (whiteList.indexOf(response.config.url) === -1) {
+        Message({
+          message: res.message,
+          type: 'error',
+          duration: 3 * 1000
+        })
+      }
 
       // 401:未登录;
       if (res.code === 401) {
