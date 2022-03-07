@@ -9,7 +9,7 @@
         <div style="text-align: center">
           <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
         </div>
-        <h2 class="login-title color-main">mall-admin-web</h2>
+        <h2 class="login-title color-main">DOUYIN-MIS</h2>
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"
@@ -66,7 +66,7 @@
           <el-form-item prop="username">
             <el-input name="username"
                       type="text"
-                      v-model="registerForm.rUsername"
+                      v-model="registerForm.username"
                       autoComplete="on"
                       placeholder="请输入用户名">
               <span slot="prefix">
@@ -78,7 +78,7 @@
             <el-input name="password"
                       :type="pwdType"
                       @keyup.enter.native="handleRegister"
-                      v-model="registerForm.rPassword"
+                      v-model="registerForm.password"
                       autoComplete="on"
                       placeholder="请输入密码">
               <span slot="prefix">
@@ -128,8 +128,8 @@
           password: '',
         },
         registerForm: {
-          rUsername: '',
-          rPassword: '',
+          username: '',
+          password: '',
         },
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -184,15 +184,10 @@
         })
       },
       handleRegister() {
-        this.$refs.loginForm.validate(valid => {
+        this.$refs.registerForm.validate(valid => {
           if (valid) {
-            // let isSupport = getSupport();
-            // if(isSupport===undefined||isSupport==null){
-            //   this.dialogVisible =true;
-            //   return;
-            // }
             this.loading = true;
-            this.$store.dispatch('Login', this.loginForm).then(() => {
+            this.$store.dispatch('Register', this.registerForm).then(() => {
               this.loading = false;
               setCookie("username", this.loginForm.username, 15);
               setCookie("password", this.loginForm.password, 15);

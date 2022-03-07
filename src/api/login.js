@@ -33,11 +33,14 @@ export function fetchList(params) {
   })
 }
 
-export function createAdmin(data) {
+export function createAdmin(username, password) {
   return request({
     url: '/admin/register',
     method: 'post',
-    data: data
+    data: {
+      username,
+      password
+    }
   })
 }
 
