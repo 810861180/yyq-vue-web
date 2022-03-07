@@ -85,45 +85,45 @@ export const constantRouterMap = [
 ]
 
 export const asyncRouterMap = [
-  // {
-  //   path: '/data-screen',
-  //   name: 'dataScreen',
-  //   meta: {title: '数据大屏', icon: 'product'},
-  //   component: () => import('@/views/alive/live-real/data-screen')
-  // },
-  // {
-  //   path: '/addProductCate',
-  //   name: 'windmill-live',
-  //   component: () => import('@/views/alive/sale-rank/details'),
-  //   meta: {title: '直播风车榜'}
-  // },
-  // {
-  //   path: '/productCate',
-  //   name: 'drainage-live',
-  //   component: () => import('@/views/alive/broadcast-room/details'),
-  //   meta: {title: '直播引流榜', icon: 'product-cate'}
-  // },
-  // {
-  //   path: '/updateProductCate',
-  //   name: 'search-live',
-  //   component: () => import('@/views/alive/live-brand/details'),
-  //   meta: {title: '直播搜索'},
-  //   hidden: true
-  // },
-  // {
-  //   path: '/productAttrList',
-  //   name: 'study-live',
-  //   component: () => import('@/views/alive/hot-product/details'),
-  //   meta: {title: '学浪榜单'},
-  //   hidden: true
-  // },
-  // {
-  //   path: '/addProductAttr',
-  //   name: 'addProductAttr',
-  //   component: () => import('@/views/alive/rise-example/details'),
-  //   meta: {title: '添加商品属性'},
-  //   hidden: true
-  // },
+  {
+    path: '/data-screen',
+    name: 'dataScreen',
+    meta: {title: '数据大屏', icon: 'product'},
+    component: () => import('@/views/alive/live-real/data-screen')
+  },
+  {
+    path: '/addProductCate',
+    name: 'windmill-live',
+    component: () => import('@/views/alive/sale-rank/details'),
+    meta: {title: '直播风车榜'}
+  },
+  {
+    path: '/productCate',
+    name: 'drainage-live',
+    component: () => import('@/views/alive/broadcast-room/details'),
+    meta: {title: '直播引流榜', icon: 'product-cate'}
+  },
+  {
+    path: '/updateProductCate',
+    name: 'search-live',
+    component: () => import('@/views/alive/live-brand/details'),
+    meta: {title: '直播搜索'},
+    hidden: true
+  },
+  {
+    path: '/productAttrList',
+    name: 'study-live',
+    component: () => import('@/views/alive/hot-product/details'),
+    meta: {title: '学浪榜单'},
+    hidden: true
+  },
+  {
+    path: '/addProductAttr',
+    name: 'addProductAttr',
+    component: () => import('@/views/alive/rise-example/details'),
+    meta: {title: '添加商品属性'},
+    hidden: true
+  },
   // {
   //   path: '/pms',
   //   component: Layout,
